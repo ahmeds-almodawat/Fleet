@@ -1,0 +1,15 @@
+﻿name: Fleet Scheduled Jobs
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-fleet-jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Supabase run-jobs function
+        run: |
+          curl -f -X POST "https://rlxhgffmspfstwlxljdc.functions.supabase.co/run-jobs" \
+            -H "x-scheduler-secret: ${{ secrets.RUN_JOBS_SECRET }}"
