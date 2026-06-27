@@ -12,14 +12,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { 
-  Car, MapPin, Clock, User, Camera, Upload, 
-  CheckCircle, XCircle, Loader2, AlertTriangle, History 
+  Car, MapPin, Clock, User, Upload, 
+  CheckCircle, XCircle, Loader2, AlertTriangle, History, Printer, Download 
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { auditLog } from '@/lib/audit';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { format } from 'date-fns';
+import { downloadCsv, toCsv } from '@/lib/csv';
 
 interface TripDetails {
   id: string;
@@ -340,6 +341,35 @@ export default function TripDetailsPage() {
     }
   };
 
+
+  const handlePrintTrip = () => {
+    window.print();
+  };
+
+  const handleExportTrip = () => {
+    if (!trip) return;
+    const csv = toCsv(
+      ['Field', 'Value'],
+      [
+        ['Trip No', trip.trip_no],
+        ['Status', trip.status],
+        ['Vehicle', `${trip.vehicle?.vehicle_code || ''} ${trip.vehicle?.plate_no || ''}`.trim()],
+        ['Driver', trip.driver?.name_en || ''],
+        ['Destination', trip.destination_text],
+        ['Purpose', trip.purpose || ''],
+        ['Requested At', trip.requested_at],
+        ['Approved At', trip.approved_at || ''],
+        ['Closed At', trip.closed_at || ''],
+        ['Start Odometer', trip.start_odometer_value],
+        ['End Odometer', trip.end_odometer_value || ''],
+        ['Distance KM', trip.distance_km || ''],
+        ['Anomaly', trip.anomaly_flag ? 'Yes' : 'No'],
+        ['Anomaly Reason', trip.anomaly_reason || ''],
+      ]
+    );
+    downloadCsv(`fleet_trip_${trip.trip_no}_${new Date().toISOString().slice(0, 10)}.csv`, csv);
+  };
+
   if (loading) {
     return (
       <MainLayout>
@@ -363,14 +393,24 @@ export default function TripDetailsPage() {
   return (
     <MainLayout>
       <PageHeader title={trip.trip_no}>
-        <StatusBadge status={trip.status} />
+        <div className={isRtl ? "flex flex-row-reverse gap-2 w-full sm:w-auto" : "flex gap-2 w-full sm:w-auto"}>
+          <StatusBadge status={trip.status} />
+          <Button type="button" variant="outline" size="sm" onClick={handlePrintTrip} className="print:hidden">
+            <Printer className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('common.print', { defaultValue: 'Print' })}</span>
+          </Button>
+          <Button type="button" variant="outline" size="sm" onClick={handleExportTrip} className="print:hidden">
+            <Download className="h-4 w-4" />
+            <span className="hidden sm:inline">{t('common.export', { defaultValue: 'Export' })}</span>
+          </Button>
+        </div>
       </PageHeader>
 
       {/* Action Buttons */}
       {trip.status === 'PendingApproval' && (canApprove || canReject) && (
         <Card className="mb-6 border-amber-200 bg-amber-50">
           <CardContent className="py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-amber-600" />
                 <span className="font-medium text-amber-900">{t('trips.details.requiresApproval')}</span>
@@ -397,12 +437,12 @@ export default function TripDetailsPage() {
       {(trip.status === 'Approved' || trip.status === 'Active') && (isDriver || canClose) && (
         <Card className="mb-6 border-teal-200 bg-teal-50">
           <CardContent className="py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-teal-600" />
                 <span className="font-medium text-teal-900">{t('trips.details.active')}</span>
               </div>
-              <Button onClick={() => setCloseDialogOpen(true)}>
+              <Button onClick={() => setCloseDialogOpen(true)} className="w-full sm:w-auto">
                 Close Trip
               </Button>
             </div>
@@ -418,7 +458,7 @@ export default function TripDetailsPage() {
               <CardTitle className="text-lg">{t('trips.details.info')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <Car className="w-5 h-5 text-muted-foreground" />
                   <div>
@@ -477,7 +517,7 @@ export default function TripDetailsPage() {
                   <img 
                     src={trip.start_odometer_photo_url} 
                     alt="Start odometer" 
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full max-h-64 sm:h-48 object-cover rounded-lg border"
                   />
                   <p className="mt-2 font-medium text-center">{trip.start_odometer_value.toLocaleString()} km</p>
                 </div>
@@ -487,7 +527,7 @@ export default function TripDetailsPage() {
                     <img 
                       src={trip.end_odometer_photo_url} 
                       alt="End odometer" 
-                      className="w-full h-48 object-cover rounded-lg border"
+                      className="w-full max-h-64 sm:h-48 object-cover rounded-lg border"
                     />
                     <p className="mt-2 font-medium text-center">{trip.end_odometer_value?.toLocaleString()} km</p>
                   </div>
@@ -534,7 +574,7 @@ export default function TripDetailsPage() {
 
       {/* Reject Dialog */}
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Reject Trip</DialogTitle>
           </DialogHeader>
@@ -561,7 +601,7 @@ export default function TripDetailsPage() {
 
       {/* Close Trip Dialog */}
       <Dialog open={closeDialogOpen} onOpenChange={setCloseDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{t('trips.details.closeTrip')}</DialogTitle>
           </DialogHeader>
@@ -612,7 +652,7 @@ export default function TripDetailsPage() {
             <div className="space-y-2">
               <Label>End Odometer Photo *</Label>
               <div 
-                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-muted/50"
+                className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 active:bg-muted"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {endPhotoPreview ? (

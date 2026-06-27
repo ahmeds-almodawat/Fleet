@@ -291,6 +291,25 @@ body {
     width: 100% !important;
   }
 
+
+  /* Trip/details print exports */
+  main, [data-sidebar="content"] {
+    overflow: visible !important;
+  }
+
+  button, input, textarea, select, [role="dialog"], .print\:hidden {
+    display: none !important;
+  }
+
+  h1 {
+    font-size: 22px !important;
+  }
+
+  img {
+    max-height: 80mm !important;
+    object-fit: contain !important;
+  }
+
   /* Footer watermark (who exported + timestamp) */
   body::after {
     content: attr(data-print-watermark);

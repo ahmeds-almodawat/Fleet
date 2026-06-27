@@ -364,6 +364,13 @@ export default function DashboardPage() {
     ? ((fuelStats.avgFuelConsumption - fuelStats.lastMonthAvg) / fuelStats.lastMonthAvg) * 100
     : 0;
 
+  const avgDistancePerTrip = stats.tripsThisMonth > 0
+    ? Math.round(stats.totalDistanceMonth / stats.tripsThisMonth)
+    : 0;
+
+  const complianceAlerts = stats.serviceDueSoon + stats.insuranceExpiringSoon + stats.registrationExpiringSoon;
+  const approvalPressure = stats.pendingApprovals + stats.activeTrips;
+
   return (
     <MainLayout>
       <PageHeader 
@@ -460,6 +467,33 @@ export default function DashboardPage() {
           subtitle={t('dashboard.tripsCount', { count: stats.lastMonthTrips })}
           icon={Gauge}
           accentColor="primary"
+        />
+      </div>
+
+      {/* Operational pulse */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <KPICard
+          title={t('dashboard.avgDistancePerTrip', { defaultValue: 'Avg. km / trip' })}
+          value={`${formatNumber(avgDistancePerTrip)} ${t('trips.km')}`}
+          subtitle={t('dashboard.thisMonthClosedTrips', { defaultValue: 'Based on this month trips' })}
+          icon={Gauge}
+          accentColor="info"
+        />
+
+        <KPICard
+          title={t('dashboard.complianceAlerts', { defaultValue: 'Compliance Alerts' })}
+          value={complianceAlerts}
+          subtitle={t('dashboard.serviceInsuranceRegistration', { defaultValue: 'Service, insurance, registration' })}
+          icon={AlertTriangle}
+          accentColor={complianceAlerts > 0 ? 'warning' : 'success'}
+        />
+
+        <KPICard
+          title={t('dashboard.operationalQueue', { defaultValue: 'Operational Queue' })}
+          value={approvalPressure}
+          subtitle={t('dashboard.activePlusApprovals', { defaultValue: 'Active trips + pending approvals' })}
+          icon={ClipboardCheck}
+          accentColor={approvalPressure > 0 ? 'primary' : 'success'}
         />
       </div>
 

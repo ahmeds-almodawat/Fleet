@@ -61,6 +61,7 @@ interface SummaryStats {
   totalSpent: number;
   completedCount: number;
   overdueCount: number;
+  dueSoonCount: number;
   scheduledCount: number;
 }
 
@@ -170,10 +171,10 @@ export default function MaintenancePage() {
   });
 
   const recordsQuery = useQuery({
-    queryKey: ['maintenance_records'],
+    queryKey: ['vehicle_maintenance'],
     queryFn: async (): Promise<MaintenanceRecord[]> => {
       const { data, error } = await supabase
-        .from('maintenance_records')
+        .from('vehicle_maintenance')
         .select(`
           *,
           vehicle:vehicles(id, vehicle_code, plate_no, current_odometer, department_id, department:departments(id,name))
@@ -190,6 +191,7 @@ export default function MaintenancePage() {
     let totalSpent = 0;
     let completedCount = 0;
     let overdueCount = 0;
+    let dueSoonCount = 0;
     let scheduledCount = 0;
     for (const r of rows) {
       if (r.status === 'Completed') {
@@ -198,11 +200,12 @@ export default function MaintenancePage() {
       }
       if (r.status === 'Scheduled' || r.status === 'InProgress') {
         scheduledCount += 1;
-        const { isOverdue } = getDueMeta(r);
+        const { isOverdue, isDueSoon } = getDueMeta(r);
         if (isOverdue) overdueCount += 1;
+        if (isDueSoon) dueSoonCount += 1;
       }
     }
-    return { totalSpent, completedCount, overdueCount, scheduledCount };
+    return { totalSpent, completedCount, overdueCount, dueSoonCount, scheduledCount };
   }, [recordsQuery.data]);
 
   const scheduledRows = useMemo(() => {
@@ -260,7 +263,7 @@ export default function MaintenancePage() {
         odometer_reading: atOdometer ? Number(atOdometer) : null,
       };
 
-      const { data: created, error } = await supabase.from('maintenance_records').insert(payload as any).select('id').single();
+      const { data: created, error } = await supabase.from('vehicle_maintenance').insert(payload as any).select('id').single();
       if (error) throw error;
       auditLog(supabase as any, {
         action: 'maintenance.create',
@@ -272,7 +275,7 @@ export default function MaintenancePage() {
     },
     onSuccess: async () => {
       toast.success(t('maintenance.toast.scheduled'));
-      await qc.invalidateQueries({ queryKey: ['maintenance_records'] });
+      await qc.invalidateQueries({ queryKey: ['vehicle_maintenance'] });
       resetScheduleForm();
       setScheduleOpen(false);
     },
@@ -284,7 +287,7 @@ export default function MaintenancePage() {
   const cancelMutation = useMutation({
     mutationFn: async (r: MaintenanceRecord) => {
       const { error } = await supabase
-        .from('maintenance_records')
+        .from('vehicle_maintenance')
         .update({ status: 'Cancelled', updated_at: new Date().toISOString() } as any)
         .eq('id', r.id);
       if (error) throw error;
@@ -298,7 +301,7 @@ export default function MaintenancePage() {
     },
     onSuccess: async () => {
       toast.success(t('maintenance.toast.cancelled'));
-      await qc.invalidateQueries({ queryKey: ['maintenance_records'] });
+      await qc.invalidateQueries({ queryKey: ['vehicle_maintenance'] });
     },
     onError: (e: any) => {
       toast.error(t('maintenance.toast.cancelFailed'), { description: e?.message });
@@ -318,7 +321,7 @@ export default function MaintenancePage() {
       };
 
       const { error } = await supabase
-        .from('maintenance_records')
+        .from('vehicle_maintenance')
         .update(patch as any)
         .eq('id', selectedRecord.id);
       if (error) throw error;
@@ -332,7 +335,7 @@ export default function MaintenancePage() {
     },
     onSuccess: async () => {
       toast.success(t('maintenance.toast.completed'));
-      await qc.invalidateQueries({ queryKey: ['maintenance_records'] });
+      await qc.invalidateQueries({ queryKey: ['vehicle_maintenance'] });
       setCompleteOpen(false);
       setSelectedRecord(null);
     },
@@ -404,6 +407,32 @@ export default function MaintenancePage() {
             </CardContent>
           </Card>
         </div>
+
+        <Card className="border-amber-200 bg-amber-50/60">
+          <CardContent className="p-4">
+            <div className={cn('flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3', isRtl && 'sm:flex-row-reverse')}>
+              <div className={cn(isRtl && 'text-right')}>
+                <div className="font-semibold text-amber-900">
+                  {t('maintenance.reminders.title', { defaultValue: 'Maintenance Reminder Snapshot' })}
+                </div>
+                <div className="text-sm text-amber-800/80">
+                  {t('maintenance.reminders.desc', { defaultValue: 'Focus first on overdue and due-soon maintenance before adding new schedules.' })}
+                </div>
+              </div>
+              <div className={cn('flex flex-wrap gap-2', isRtl && 'flex-row-reverse')}>
+                <Badge variant={stats.overdueCount > 0 ? 'destructive' : 'secondary'}>
+                  {t('maintenance.status.overdue', { defaultValue: 'Overdue' })}: {formatNumber(stats.overdueCount)}
+                </Badge>
+                <Badge variant={stats.dueSoonCount > 0 ? 'secondary' : 'outline'}>
+                  {t('maintenance.status.dueSoon', { defaultValue: 'Due soon' })}: {formatNumber(stats.dueSoonCount)}
+                </Badge>
+                <Badge variant="outline">
+                  {t('maintenance.status.scheduled', { defaultValue: 'Scheduled' })}: {formatNumber(stats.scheduledCount)}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Records */}
         <Card>
