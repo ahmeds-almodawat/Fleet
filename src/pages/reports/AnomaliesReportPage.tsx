@@ -233,7 +233,7 @@ export default function AnomaliesReportPage() {
   useEffect(() => {
     if (!canView) return;
     loadLookups();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [canView]);
 
   // Reload rows when filters change (small debounce for search)
@@ -243,7 +243,7 @@ export default function AnomaliesReportPage() {
       loadRows();
     }, 250);
     return () => clearTimeout(handle);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [canView, search, vehicleId, driverId, year, month, day, windowDays]);
 
   const exportCsv = () => {

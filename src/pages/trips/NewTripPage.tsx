@@ -153,7 +153,7 @@ export default function NewTripPage() {
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // Default driver: if the current user is a driver, preselect self
@@ -161,7 +161,7 @@ export default function NewTripPage() {
     if (profile?.is_driver && !selectedDriverId) {
       setSelectedDriverId(profile.id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [profile?.id, profile?.is_driver]);
 
   const handleVehicleChange = async (vehicleId: string) => {

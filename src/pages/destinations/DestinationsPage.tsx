@@ -80,7 +80,7 @@ export default function DestinationsPage() {
 
   useEffect(() => {
     loadDestinations();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const filtered = useMemo(() => {

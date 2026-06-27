@@ -1,11 +1,17 @@
 export type ExportCell = string | number | boolean | null | undefined;
 
-function escapeCsvCell(value: ExportCell): string {
+export type ExcelSheet = {
+  name: string;
+  headers: ExportCell[];
+  rows: ExportCell[][];
+};
+
+export function escapeCsvCell(value: ExportCell): string {
   const s = value == null ? '' : String(value);
   return `"${s.replace(/"/g, '""')}"`;
 }
 
-function escapeHtml(value: ExportCell): string {
+export function escapeHtml(value: ExportCell): string {
   return (value == null ? '' : String(value))
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -14,34 +20,15 @@ function escapeHtml(value: ExportCell): string {
     .replace(/'/g, '&#039;');
 }
 
-export function downloadTextFile(filename: string, content: string, type = 'text/plain;charset=utf-8;') {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-export function downloadCsvFile(filename: string, headers: ExportCell[], rows: ExportCell[][]) {
-  const content = '\ufeff' + [headers, ...rows]
+export function buildCsvContent(headers: ExportCell[], rows: ExportCell[][]): string {
+  return '\ufeff' + [headers, ...rows]
     .map((row) => row.map(escapeCsvCell).join(','))
     .join('\n');
-  downloadTextFile(filename, content, 'text/csv;charset=utf-8;');
 }
 
-export type ExcelSheet = {
-  name: string;
-  headers: ExportCell[];
-  rows: ExportCell[][];
-};
-
-export function downloadExcelHtml(filename: string, sheets: ExcelSheet[]) {
+export function buildExcelHtml(sheets: ExcelSheet[]): string {
   const safeSheets = sheets.filter((sheet) => sheet.headers.length > 0);
-  const html = `\ufeff<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+  return `\ufeff<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
 <meta charset="utf-8" />
 <style>
@@ -64,7 +51,26 @@ ${safeSheets.map((sheet) => `
 `).join('\n')}
 </body>
 </html>`;
-  downloadTextFile(filename, html, 'application/vnd.ms-excel;charset=utf-8;');
+}
+
+export function downloadTextFile(filename: string, content: string, type = 'text/plain;charset=utf-8;') {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+export function downloadCsvFile(filename: string, headers: ExportCell[], rows: ExportCell[][]) {
+  downloadTextFile(filename, buildCsvContent(headers, rows), 'text/csv;charset=utf-8;');
+}
+
+export function downloadExcelHtml(filename: string, sheets: ExcelSheet[]) {
+  downloadTextFile(filename, buildExcelHtml(sheets), 'application/vnd.ms-excel;charset=utf-8;');
 }
 
 export function printCurrentPage() {

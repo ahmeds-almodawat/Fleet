@@ -1,45 +1,44 @@
-import type { ReactNode } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import i18n from '@/i18n';
-import { AccessDenied } from '@/components/ui/access-denied';
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import i18n from "@/i18n";
+import { AccessDenied } from "@/components/ui/access-denied";
 
-// Pages
-import LoginPage from "./pages/auth/LoginPage";
-import DashboardPage from "./pages/dashboard/DashboardPage";
-import VehiclesPage from "./pages/vehicles/VehiclesPage";
-import VehicleDetailsPage from "./pages/vehicles/VehicleDetailsPage";
-import VehicleDocumentsDashboardPage from "./pages/vehicles/VehicleDocumentsDashboardPage";
-import VehicleTypesPage from "./pages/vehicle-types/VehicleTypesPage";
-import DestinationsPage from "./pages/destinations/DestinationsPage";
-import MaintenancePage from "./pages/maintenance/MaintenancePage";
-import MaintenanceCalendarPage from "./pages/maintenance/MaintenanceCalendarPage";
-import TripsPage from "./pages/trips/TripsPage";
-import NewTripPage from "./pages/trips/NewTripPage";
-import DriverTripWizardPage from "./pages/trips/DriverTripWizardPage";
-import TripDetailsPage from "./pages/trips/TripDetailsPage";
-import ApprovalsPage from "./pages/approvals/ApprovalsPage";
-import UsersPage from "./pages/users/UsersPage";
-import RolesPage from "./pages/roles/RolesPage";
-import ReportsPage from "./pages/reports/ReportsPage";
-import ReportsExportCenterPage from "./pages/reports/ReportsExportCenterPage";
-import MaintenanceCostReportPage from "./pages/reports/MaintenanceCostReportPage";
-import ComplianceReportPage from "./pages/reports/ComplianceReportPage";
-import AnomaliesReportPage from "./pages/reports/AnomaliesReportPage";
-import SettingsPage from "./pages/settings/SettingsPage";
-import StudioPage from "./pages/admin/StudioPage";
-import BackupExportPage from "./pages/admin/BackupExportPage";
-import AuditLogsPage from "./pages/admin/AuditLogsPage";
-import AdminActivitySummaryPage from "./pages/admin/AdminActivitySummaryPage";
-import SystemJobsPage from "./pages/admin/SystemJobsPage";
-import SystemHealthPage from "./pages/admin/SystemHealthPage";
-import NotificationsPage from "./pages/notifications/NotificationsPage";
-import NotFound from "./pages/NotFound";
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const DashboardPage = lazy(() => import("./pages/dashboard/DashboardPage"));
+const VehiclesPage = lazy(() => import("./pages/vehicles/VehiclesPage"));
+const VehicleDetailsPage = lazy(() => import("./pages/vehicles/VehicleDetailsPage"));
+const VehicleDocumentsDashboardPage = lazy(() => import("./pages/vehicles/VehicleDocumentsDashboardPage"));
+const VehicleTypesPage = lazy(() => import("./pages/vehicle-types/VehicleTypesPage"));
+const DestinationsPage = lazy(() => import("./pages/destinations/DestinationsPage"));
+const MaintenancePage = lazy(() => import("./pages/maintenance/MaintenancePage"));
+const MaintenanceCalendarPage = lazy(() => import("./pages/maintenance/MaintenanceCalendarPage"));
+const TripsPage = lazy(() => import("./pages/trips/TripsPage"));
+const NewTripPage = lazy(() => import("./pages/trips/NewTripPage"));
+const DriverTripWizardPage = lazy(() => import("./pages/trips/DriverTripWizardPage"));
+const TripDetailsPage = lazy(() => import("./pages/trips/TripDetailsPage"));
+const ApprovalsPage = lazy(() => import("./pages/approvals/ApprovalsPage"));
+const UsersPage = lazy(() => import("./pages/users/UsersPage"));
+const RolesPage = lazy(() => import("./pages/roles/RolesPage"));
+const ReportsPage = lazy(() => import("./pages/reports/ReportsPage"));
+const ReportsExportCenterPage = lazy(() => import("./pages/reports/ReportsExportCenterPage"));
+const MaintenanceCostReportPage = lazy(() => import("./pages/reports/MaintenanceCostReportPage"));
+const ComplianceReportPage = lazy(() => import("./pages/reports/ComplianceReportPage"));
+const AnomaliesReportPage = lazy(() => import("./pages/reports/AnomaliesReportPage"));
+const SettingsPage = lazy(() => import("./pages/settings/SettingsPage"));
+const StudioPage = lazy(() => import("./pages/admin/StudioPage"));
+const BackupExportPage = lazy(() => import("./pages/admin/BackupExportPage"));
+const AuditLogsPage = lazy(() => import("./pages/admin/AuditLogsPage"));
+const AdminActivitySummaryPage = lazy(() => import("./pages/admin/AdminActivitySummaryPage"));
+const SystemJobsPage = lazy(() => import("./pages/admin/SystemJobsPage"));
+const SystemHealthPage = lazy(() => import("./pages/admin/SystemHealthPage"));
+const NotificationsPage = lazy(() => import("./pages/notifications/NotificationsPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -49,18 +48,22 @@ type ProtectedRouteProps = {
   requiredAnyPermission?: string[];
 };
 
-function LoadingScreen() {
+export function LoadingScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="flex flex-col items-center gap-4">
         <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-        <p className="text-muted-foreground">{i18n.t('common.loading')}</p>
+        <p className="text-muted-foreground">{i18n.t("common.loading")}</p>
       </div>
     </div>
   );
 }
 
-function ProtectedRoute({ children, requiredPermission, requiredAnyPermission }: ProtectedRouteProps) {
+function LazyPage({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<LoadingScreen />}>{children}</Suspense>;
+}
+
+export function ProtectedRoute({ children, requiredPermission, requiredAnyPermission }: ProtectedRouteProps) {
   const { user, loading, hasPermission, hasAnyPermission } = useAuth();
 
   if (loading) return <LoadingScreen />;
@@ -83,6 +86,28 @@ function ProtectedRoute({ children, requiredPermission, requiredAnyPermission }:
   return <>{children}</>;
 }
 
+function protectedPage(children: ReactNode, guard?: Omit<ProtectedRouteProps, "children">) {
+  return (
+    <ProtectedRoute {...guard}>
+      <LazyPage>{children}</LazyPage>
+    </ProtectedRoute>
+  );
+}
+
+export const routePermissions = {
+  vehicles: ["vehicles.read", "vehicles.read_all", "vehicles.read_department"],
+  vehicleDocuments: ["vehicles.read", "vehicles.read_all", "vehicles.read_department", "reports.view"],
+  maintenance: ["maintenance.read", "maintenance.read_all", "maintenance.read_department", "maintenance.manage", "fleet.manage"],
+  trips: ["trips.read_own", "trips.read_all", "trips.read_department", "trips.create"],
+  tripRead: ["trips.read_own", "trips.read_all", "trips.read_department"],
+  reports: ["reports.view", "reports.read", "reports.read_all"],
+  reportsExport: ["reports.view", "reports.read", "reports.read_all", "reports.export", "reports.export_csv"],
+  anomalies: ["reports.view", "reports.read", "reports.read_all", "alerts.read", "alerts.odometer_anomaly"],
+  users: ["users.read", "users.create", "users.edit"],
+  roles: ["roles.read", "roles.create", "roles.edit", "roles.manage"],
+  health: ["system.health.view", "system.jobs.view"],
+} as const;
+
 function AppRoutes() {
   const { user, loading } = useAuth();
 
@@ -90,38 +115,38 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
+      <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LazyPage><LoginPage /></LazyPage>} />
       <Route path="/register" element={<Navigate to="/login" replace />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-      <Route path="/vehicles" element={<ProtectedRoute requiredAnyPermission={['vehicles.read', 'vehicles.read_all', 'vehicles.read_department']}><VehiclesPage /></ProtectedRoute>} />
-      <Route path="/vehicles/:id" element={<ProtectedRoute requiredAnyPermission={['vehicles.read', 'vehicles.read_all', 'vehicles.read_department']}><VehicleDetailsPage /></ProtectedRoute>} />
-      <Route path="/vehicles/documents" element={<ProtectedRoute requiredAnyPermission={['vehicles.read', 'vehicles.read_all', 'vehicles.read_department', 'reports.view']}><VehicleDocumentsDashboardPage /></ProtectedRoute>} />
-      <Route path="/vehicle-types" element={<ProtectedRoute requiredPermission="vehicle_types.read"><VehicleTypesPage /></ProtectedRoute>} />
-      <Route path="/destinations" element={<ProtectedRoute requiredPermission="destinations.read"><DestinationsPage /></ProtectedRoute>} />
-      <Route path="/maintenance" element={<ProtectedRoute requiredAnyPermission={['maintenance.read', 'maintenance.read_all', 'maintenance.read_department', 'maintenance.manage', 'fleet.manage']}><MaintenancePage /></ProtectedRoute>} />
-      <Route path="/maintenance/calendar" element={<ProtectedRoute requiredAnyPermission={['maintenance.read', 'maintenance.read_all', 'maintenance.read_department', 'maintenance.manage', 'fleet.manage']}><MaintenanceCalendarPage /></ProtectedRoute>} />
-      <Route path="/trips" element={<ProtectedRoute requiredAnyPermission={['trips.read_own', 'trips.read_all', 'trips.read_department', 'trips.create']}><TripsPage /></ProtectedRoute>} />
-      <Route path="/trips/new" element={<ProtectedRoute requiredPermission="trips.create"><NewTripPage /></ProtectedRoute>} />
-      <Route path="/trips/driver-wizard" element={<ProtectedRoute requiredAnyPermission={['trips.create', 'trips.read_own', 'trips.read_department', 'trips.read_all']}><DriverTripWizardPage /></ProtectedRoute>} />
-      <Route path="/trips/:id" element={<ProtectedRoute requiredAnyPermission={['trips.read_own', 'trips.read_all', 'trips.read_department']}><TripDetailsPage /></ProtectedRoute>} />
-      <Route path="/approvals" element={<ProtectedRoute requiredAnyPermission={['trips.approve', 'trips.reject']}><ApprovalsPage /></ProtectedRoute>} />
-      <Route path="/users" element={<ProtectedRoute requiredAnyPermission={['users.read', 'users.create', 'users.edit']}><UsersPage /></ProtectedRoute>} />
-      <Route path="/roles" element={<ProtectedRoute requiredAnyPermission={['roles.read', 'roles.create', 'roles.edit', 'roles.manage']}><RolesPage /></ProtectedRoute>} />
-      <Route path="/reports" element={<ProtectedRoute requiredAnyPermission={['reports.view', 'reports.read', 'reports.read_all']}><ReportsPage /></ProtectedRoute>} />
-      <Route path="/reports/export-center" element={<ProtectedRoute requiredAnyPermission={['reports.view', 'reports.read', 'reports.read_all', 'reports.export', 'reports.export_csv']}><ReportsExportCenterPage /></ProtectedRoute>} />
-      <Route path="/reports/maintenance-costs" element={<ProtectedRoute requiredAnyPermission={['reports.view', 'reports.read', 'reports.read_all']}><MaintenanceCostReportPage /></ProtectedRoute>} />
-      <Route path="/reports/compliance" element={<ProtectedRoute requiredAnyPermission={['reports.view', 'reports.read', 'reports.read_all', 'vehicles.read_all']}><ComplianceReportPage /></ProtectedRoute>} />
-      <Route path="/reports/anomalies" element={<ProtectedRoute requiredAnyPermission={['reports.view', 'reports.read', 'reports.read_all', 'alerts.read', 'alerts.odometer_anomaly']}><AnomaliesReportPage /></ProtectedRoute>} />
-      <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
-      <Route path="/settings" element={<ProtectedRoute requiredPermission="settings.manage"><SettingsPage /></ProtectedRoute>} />
-      <Route path="/admin/studio" element={<ProtectedRoute requiredAnyPermission={['studio.manage', 'settings.manage']}><StudioPage /></ProtectedRoute>} />
-      <Route path="/admin/audit" element={<ProtectedRoute requiredPermission="audit.read"><AuditLogsPage /></ProtectedRoute>} />
-      <Route path="/admin/activity" element={<ProtectedRoute requiredPermission="audit.read"><AdminActivitySummaryPage /></ProtectedRoute>} />
-      <Route path="/admin/backups" element={<ProtectedRoute requiredPermission="system.backup.export"><BackupExportPage /></ProtectedRoute>} />
-      <Route path="/admin/jobs" element={<ProtectedRoute requiredPermission="system.jobs.view"><SystemJobsPage /></ProtectedRoute>} />
-      <Route path="/admin/health" element={<ProtectedRoute requiredAnyPermission={['system.health.view', 'system.jobs.view']}><SystemHealthPage /></ProtectedRoute>} />
-      <Route path="*" element={<NotFound />} />
+      <Route path="/dashboard" element={protectedPage(<DashboardPage />)} />
+      <Route path="/vehicles" element={protectedPage(<VehiclesPage />, { requiredAnyPermission: [...routePermissions.vehicles] })} />
+      <Route path="/vehicles/:id" element={protectedPage(<VehicleDetailsPage />, { requiredAnyPermission: [...routePermissions.vehicles] })} />
+      <Route path="/vehicles/documents" element={protectedPage(<VehicleDocumentsDashboardPage />, { requiredAnyPermission: [...routePermissions.vehicleDocuments] })} />
+      <Route path="/vehicle-types" element={protectedPage(<VehicleTypesPage />, { requiredPermission: "vehicle_types.read" })} />
+      <Route path="/destinations" element={protectedPage(<DestinationsPage />, { requiredPermission: "destinations.read" })} />
+      <Route path="/maintenance" element={protectedPage(<MaintenancePage />, { requiredAnyPermission: [...routePermissions.maintenance] })} />
+      <Route path="/maintenance/calendar" element={protectedPage(<MaintenanceCalendarPage />, { requiredAnyPermission: [...routePermissions.maintenance] })} />
+      <Route path="/trips" element={protectedPage(<TripsPage />, { requiredAnyPermission: [...routePermissions.trips] })} />
+      <Route path="/trips/new" element={protectedPage(<NewTripPage />, { requiredPermission: "trips.create" })} />
+      <Route path="/trips/driver-wizard" element={protectedPage(<DriverTripWizardPage />, { requiredAnyPermission: [...routePermissions.trips] })} />
+      <Route path="/trips/:id" element={protectedPage(<TripDetailsPage />, { requiredAnyPermission: [...routePermissions.tripRead] })} />
+      <Route path="/approvals" element={protectedPage(<ApprovalsPage />, { requiredAnyPermission: ["trips.approve", "trips.reject"] })} />
+      <Route path="/users" element={protectedPage(<UsersPage />, { requiredAnyPermission: [...routePermissions.users] })} />
+      <Route path="/roles" element={protectedPage(<RolesPage />, { requiredAnyPermission: [...routePermissions.roles] })} />
+      <Route path="/reports" element={protectedPage(<ReportsPage />, { requiredAnyPermission: [...routePermissions.reports] })} />
+      <Route path="/reports/export-center" element={protectedPage(<ReportsExportCenterPage />, { requiredAnyPermission: [...routePermissions.reportsExport] })} />
+      <Route path="/reports/maintenance-costs" element={protectedPage(<MaintenanceCostReportPage />, { requiredAnyPermission: [...routePermissions.reports] })} />
+      <Route path="/reports/compliance" element={protectedPage(<ComplianceReportPage />, { requiredAnyPermission: [...routePermissions.reports, "vehicles.read_all"] })} />
+      <Route path="/reports/anomalies" element={protectedPage(<AnomaliesReportPage />, { requiredAnyPermission: [...routePermissions.anomalies] })} />
+      <Route path="/notifications" element={protectedPage(<NotificationsPage />)} />
+      <Route path="/settings" element={protectedPage(<SettingsPage />, { requiredPermission: "settings.manage" })} />
+      <Route path="/admin/studio" element={protectedPage(<StudioPage />, { requiredAnyPermission: ["studio.manage", "settings.manage"] })} />
+      <Route path="/admin/audit" element={protectedPage(<AuditLogsPage />, { requiredPermission: "audit.read" })} />
+      <Route path="/admin/activity" element={protectedPage(<AdminActivitySummaryPage />, { requiredPermission: "audit.read" })} />
+      <Route path="/admin/backups" element={protectedPage(<BackupExportPage />, { requiredPermission: "system.backup.export" })} />
+      <Route path="/admin/jobs" element={protectedPage(<SystemJobsPage />, { requiredPermission: "system.jobs.view" })} />
+      <Route path="/admin/health" element={protectedPage(<SystemHealthPage />, { requiredAnyPermission: [...routePermissions.health] })} />
+      <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
     </Routes>
   );
 }

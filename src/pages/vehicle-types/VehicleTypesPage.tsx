@@ -73,7 +73,7 @@ export default function VehicleTypesPage() {
 
   useEffect(() => {
     loadVehicleTypes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const filteredTypes = useMemo(() => {

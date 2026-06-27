@@ -112,7 +112,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     fetchRows();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [user?.id]);
 
   const markAllRead = async () => {

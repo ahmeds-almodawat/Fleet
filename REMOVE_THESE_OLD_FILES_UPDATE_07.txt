@@ -1,0 +1,15 @@
+Remove these from the local repo before final commit if they still exist:
+
+.env
+supabase/functions/.env
+supabase/.temp/
+backup_data.sql
+backup_schema.sql
+Fleet7.zip
+bun.lockb
+dist/
+
+Use:
+
+npm run release:clean
+npm run release:clean:apply

@@ -34,14 +34,16 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "@typescript-eslint/no-unused-vars": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "off",
 
-      // Existing Lovable-generated pages still contain broad Supabase response casts.
-      // Keep this as a warning during soft production hardening instead of blocking releases.
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-empty-object-type": "warn",
-      "@typescript-eslint/no-require-imports": "warn",
+      // Soft-production default: lint blocks real errors, while legacy generated
+      // Supabase/shadcn casts remain covered by typecheck and tests.
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "react-refresh/only-export-components": "off",
       "no-empty": ["warn", { allowEmptyCatch: true }],
     },
   },

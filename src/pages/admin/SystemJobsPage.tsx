@@ -71,7 +71,7 @@ export default function SystemJobsPage() {
   useEffect(() => {
     if (!canView) return;
     void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [canView]);
 
   const trigger = async (force: boolean) => {
