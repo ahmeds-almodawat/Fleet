@@ -4,8 +4,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +29,9 @@ export default function NotificationsPage() {
   const [rows, setRows] = useState<NotificationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
+  const [search, setSearch] = useState("");
+  const [severityFilter, setSeverityFilter] = useState("all");
+  const [readFilter, setReadFilter] = useState("all");
 
   const isRtl = i18n.language?.startsWith('ar');
 
@@ -122,6 +127,28 @@ export default function NotificationsPage() {
     setMarking(false);
   };
 
+  const markOneRead = async (id: string) => {
+    const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    if (error) {
+      toast({ title: t("notifications.mark_failed"), description: error.message, variant: "destructive" });
+      return;
+    }
+    setRows((prev) => prev.map((n) => n.id === id ? { ...n, is_read: true } : n));
+  };
+
+  const unreadCount = rows.filter((n) => !n.is_read).length;
+  const blockerCount = rows.filter((n) => n.severity === "BLOCKER").length;
+  const warnCount = rows.filter((n) => n.severity === "WARN").length;
+
+  const filteredRows = rows.filter((n) => {
+    const content = localizeNotification(n);
+    const q = search.trim().toLowerCase();
+    const matchesSearch = !q || [content.title, content.body, n.entity_type].some((x) => String(x || '').toLowerCase().includes(q));
+    const matchesSeverity = severityFilter === "all" || n.severity === severityFilter;
+    const matchesRead = readFilter === "all" || (readFilter === "unread" ? !n.is_read : n.is_read);
+    return matchesSearch && matchesSeverity && matchesRead;
+  });
+
   return (
     <MainLayout>
       <div className="space-y-6">
@@ -135,14 +162,43 @@ export default function NotificationsPage() {
           }
         />
 
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Unread</div><div className="text-2xl font-bold">{unreadCount}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Warnings</div><div className="text-2xl font-bold">{warnCount}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Blockers</div><div className="text-2xl font-bold">{blockerCount}</div></CardContent></Card>
+        </div>
+
+        <Card className="print:hidden">
+          <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("common.search", { defaultValue: "Search" })} />
+            <Select value={severityFilter} onValueChange={setSeverityFilter}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All severity</SelectItem>
+                <SelectItem value="INFO">Info</SelectItem>
+                <SelectItem value="WARN">Warnings</SelectItem>
+                <SelectItem value="BLOCKER">Blockers</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={readFilter} onValueChange={setReadFilter}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="unread">Unread</SelectItem>
+                <SelectItem value="read">Read</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
         <Card className="p-4">
           {loading ? (
             <div className="text-sm text-muted-foreground">{t("common.loading")}</div>
-          ) : rows.length === 0 ? (
+          ) : filteredRows.length === 0 ? (
             <div className="text-sm text-muted-foreground">{t("notifications.none")}</div>
           ) : (
             <div className="space-y-3">
-              {rows.map((n) => (
+              {filteredRows.map((n) => (
                 <div key={n.id} className="flex items-start justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -176,6 +232,11 @@ export default function NotificationsPage() {
                       {new Date(n.created_at).toLocaleString(isRtl ? 'ar-SA' : undefined)}
                     </div>
                   </div>
+                  {!n.is_read && (
+                    <Button size="sm" variant="outline" onClick={() => markOneRead(n.id)} className="shrink-0">
+                      {t("notifications.mark_read", { defaultValue: "Mark read" })}
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>

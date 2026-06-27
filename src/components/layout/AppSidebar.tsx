@@ -19,6 +19,7 @@ import {
   Plus,
   FileText,
   FileDown,
+  CalendarDays,
   DollarSign,
   ShieldAlert,
   AlertTriangle,
@@ -77,6 +78,7 @@ const tripsNavItems: NavItem[] = [
     children: [
       { icon: Route, label: "All Trips", path: "/trips" },
       { icon: Plus, label: "New Trip", path: "/trips/new" },
+      { icon: ClipboardCheck, label: "Driver Wizard", path: "/trips/driver-wizard", permissions: ["trips.create", "trips.read_own", "trips.read_department", "trips.read_all"] },
     ]
   },
   { icon: ClipboardCheck, label: "Approvals", path: "/approvals" },
@@ -84,7 +86,9 @@ const tripsNavItems: NavItem[] = [
 
 const fleetNavItems: NavItem[] = [
   { icon: Car, label: "Vehicles", path: "/vehicles" },
+  { icon: FileText, label: "Vehicle Documents", path: "/vehicles/documents", permissions: ["vehicles.read", "vehicles.read_all", "vehicles.read_department", "reports.view"] },
   { icon: Wrench, label: "Maintenance", path: "/maintenance" },
+  { icon: CalendarDays, label: "Maintenance Calendar", path: "/maintenance/calendar", permissions: ["maintenance.read", "maintenance.read_all", "maintenance.read_department", "maintenance.manage", "fleet.manage"] },
   { icon: Truck, label: "Vehicle Types", path: "/vehicle-types" },
   { icon: MapPin, label: "Destinations", path: "/destinations" },
 ];
@@ -96,6 +100,7 @@ const reportsNavItems: NavItem[] = [
     path: "/reports", 
     children: [
       { icon: FileText, label: "Overview", path: "/reports" },
+      { icon: FileDown, label: "Export Center", path: "/reports/export-center", permissions: ["reports.view", "reports.read", "reports.read_all", "reports.export", "reports.export_csv"] },
       { icon: DollarSign, label: "Maintenance Costs", path: "/reports/maintenance-costs" },
       { icon: ShieldAlert, label: "Compliance", path: "/reports/compliance" },
       { icon: AlertTriangle, label: "Anomalies", path: "/reports/anomalies" },
@@ -107,6 +112,7 @@ const adminNavItems: NavItem[] = [
   { icon: Users, label: "Users", path: "/users" },
   { icon: Shield, label: "Roles", path: "/roles" },
   { icon: ShieldAlert, label: "Audit Logs", path: "/admin/audit", permission: 'audit.read' },
+  { icon: Activity, label: "Admin Activity", path: "/admin/activity", permission: 'audit.read' },
   { icon: ClipboardCheck, label: "Jobs", path: "/admin/jobs", permission: 'system.jobs.view' },
   { icon: Activity, label: "System Health", path: "/admin/health", permissions: ['system.health.view', 'system.jobs.view'] },
   { icon: FileDown, label: "Backups", path: "/admin/backups", permission: 'system.backup.export' },
@@ -257,6 +263,11 @@ export function AppSidebar({ side }: { side?: 'left' | 'right' }) {
       case 'Compliance': return t('reports.compliance');
       case 'Anomalies': return t('reports.anomalies.title');
       case 'Audit Logs': return t('audit.title');
+      case 'Admin Activity': return t('adminActivity.title', { defaultValue: 'Admin Activity' });
+      case 'Driver Wizard': return t('driverWizard.title', { defaultValue: 'Driver Wizard' });
+      case 'Vehicle Documents': return t('vehicleDocs.shortTitle', { defaultValue: 'Documents' });
+      case 'Maintenance Calendar': return t('maintenance.calendar.title', { defaultValue: 'Maintenance Calendar' });
+      case 'Export Center': return t('reports.exportCenter.shortTitle', { defaultValue: 'Export Center' });
       default: return label;
     }
   };

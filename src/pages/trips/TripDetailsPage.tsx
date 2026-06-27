@@ -406,6 +406,25 @@ export default function TripDetailsPage() {
         </div>
       </PageHeader>
 
+      <section className="hidden print:block trip-print-template mb-6">
+        <div className="text-center border-b pb-4 mb-4">
+          <h1 className="text-2xl font-bold">Fleet Trip Record / سجل الرحلة</h1>
+          <p className="text-sm text-muted-foreground">Al Modawat Fleet Control / نظام أسطول المداواة</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div><strong>Trip No / رقم الرحلة:</strong> {trip.trip_no}</div>
+          <div><strong>Status / الحالة:</strong> {trip.status}</div>
+          <div><strong>Vehicle / المركبة:</strong> {trip.vehicle?.vehicle_code} - {trip.vehicle?.plate_no}</div>
+          <div><strong>Driver / السائق:</strong> {trip.driver?.name_en || '—'}</div>
+          <div><strong>Destination / الوجهة:</strong> {trip.destination_text}</div>
+          <div><strong>Requested / تاريخ الطلب:</strong> {trip.requested_at ? format(new Date(trip.requested_at), 'yyyy-MM-dd HH:mm') : '—'}</div>
+          <div><strong>Start KM / عداد البداية:</strong> {trip.start_odometer_value?.toLocaleString()} km</div>
+          <div><strong>End KM / عداد النهاية:</strong> {trip.end_odometer_value ? `${trip.end_odometer_value.toLocaleString()} km` : '—'}</div>
+          <div><strong>Distance / المسافة:</strong> {trip.distance_km ? `${trip.distance_km.toLocaleString()} km` : '—'}</div>
+          <div><strong>Closed / تاريخ الإغلاق:</strong> {trip.closed_at ? format(new Date(trip.closed_at), 'yyyy-MM-dd HH:mm') : '—'}</div>
+        </div>
+      </section>
+
       {/* Action Buttons */}
       {trip.status === 'PendingApproval' && (canApprove || canReject) && (
         <Card className="mb-6 border-amber-200 bg-amber-50">

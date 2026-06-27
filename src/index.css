@@ -328,3 +328,14 @@ body {
 html[dir="rtl"] body { font-family: Cairo, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 
 .ltr { direction:ltr; unicode-bidi:plaintext; }
+
+
+@media print {
+  body { background: #ffffff !important; }
+  .print\:hidden { display: none !important; }
+  .trip-print-template { display: block !important; color: #111827; }
+  .break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
+  a { color: inherit !important; text-decoration: none !important; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
+}
