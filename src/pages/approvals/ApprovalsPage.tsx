@@ -170,7 +170,7 @@ export default function ApprovalsPage() {
 
                   <div className="flex items-center gap-2">
                     <Link to={`/trips/${trip.id}`}>
-                      <Button variant="outline" size="sm">View Details</Button>
+                      <Button variant="outline" size="sm">{t('common.viewDetails')}</Button>
                     </Link>
                     {trip.status === 'PendingApproval' && (
                       <>

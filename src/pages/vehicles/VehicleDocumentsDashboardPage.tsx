@@ -41,12 +41,18 @@ function statusFor(days: number | null) {
   return 'valid';
 }
 
-function docBadge(days: number | null, label: string) {
+function docBadge(days: number | null, label: string, t: (key: string, options?: Record<string, unknown>) => string) {
   const status = statusFor(days);
-  if (status === 'expired') return <Badge variant="destructive">{label}: expired {Math.abs(days ?? 0)}d</Badge>;
-  if (status === 'expiring') return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">{label}: {days}d</Badge>;
-  if (status === 'missing') return <Badge variant="outline">{label}: missing</Badge>;
-  return <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">{label}: valid</Badge>;
+  const count = Math.abs(days ?? 0);
+  if (status === 'expired') return <Badge variant="destructive">{label}: {t('vehicleDocs.status.expired', { count })}</Badge>;
+  if (status === 'expiring') return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">{label}: {t('vehicleDocs.status.expiring', { count: days ?? 0 })}</Badge>;
+  if (status === 'missing') return <Badge variant="outline">{label}: {t('vehicleDocs.status.missing')}</Badge>;
+  return <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">{label}: {t('vehicleDocs.status.valid')}</Badge>;
+}
+
+function riskLabel(risk: string, t: (key: string) => string) {
+  const map: Record<string, string> = { expired: 'vehicleDocs.expired', expiring: 'common.expiring', missing: 'vehicleDocs.missing', valid: 'vehicleDocs.valid' };
+  return t(map[risk] || risk);
 }
 
 export default function VehicleDocumentsDashboardPage() {
@@ -110,7 +116,18 @@ export default function VehicleDocumentsDashboardPage() {
     v.worst,
   ]);
 
-  const headers = ['Vehicle', 'Plate', 'Department', 'Insurance No', 'Insurance End', 'Insurance Days Left', 'Registration No', 'Registration End', 'Registration Days Left', 'Risk'];
+  const headers = [
+    t('vehicles.vehicle'),
+    t('vehicles.plate'),
+    t('common.department'),
+    t('vehicles.insurancePolicyNo'),
+    t('vehicles.insuranceEnd'),
+    `${t('vehicleDocs.insurance')} - ${t('vehicleDocs.daysLeft')}`,
+    t('vehicles.registrationNo'),
+    t('vehicles.registrationEnd'),
+    `${t('vehicleDocs.registration')} - ${t('vehicleDocs.daysLeft')}`,
+    t('vehicleDocs.risk'),
+  ];
 
   return (
     <MainLayout>
@@ -122,7 +139,7 @@ export default function VehicleDocumentsDashboardPage() {
           <Button variant="outline" onClick={() => downloadCsvFile(`vehicle_documents_${new Date().toISOString().slice(0, 10)}.csv`, headers, exportRows)}>
             <Download className="h-4 w-4" /> CSV
           </Button>
-          <Button variant="outline" onClick={() => downloadExcelHtml(`vehicle_documents_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: 'Vehicle Documents', headers, rows: exportRows }])}>
+          <Button variant="outline" onClick={() => downloadExcelHtml(`vehicle_documents_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: t('vehicleDocs.title'), headers, rows: exportRows }])}>
             <FileSpreadsheet className="h-4 w-4" /> Excel
           </Button>
           <Button variant="outline" onClick={printCurrentPage}>
@@ -133,10 +150,10 @@ export default function VehicleDocumentsDashboardPage() {
 
       <div className="space-y-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card><CardContent className="p-4"><AlertTriangle className="h-5 w-5 text-red-600" /><div className="text-sm text-muted-foreground">Expired</div><div className="text-2xl font-bold">{stats.expired}</div></CardContent></Card>
-          <Card><CardContent className="p-4"><CalendarDays className="h-5 w-5 text-amber-600" /><div className="text-sm text-muted-foreground">Expiring 30d</div><div className="text-2xl font-bold">{stats.expiring}</div></CardContent></Card>
-          <Card><CardContent className="p-4"><FileText className="h-5 w-5 text-slate-600" /><div className="text-sm text-muted-foreground">Missing</div><div className="text-2xl font-bold">{stats.missing}</div></CardContent></Card>
-          <Card><CardContent className="p-4"><ShieldCheck className="h-5 w-5 text-emerald-600" /><div className="text-sm text-muted-foreground">Valid</div><div className="text-2xl font-bold">{stats.valid}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><AlertTriangle className="h-5 w-5 text-red-600" /><div className="text-sm text-muted-foreground">{t('vehicleDocs.expired')}</div><div className="text-2xl font-bold">{stats.expired}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><CalendarDays className="h-5 w-5 text-amber-600" /><div className="text-sm text-muted-foreground">{t('vehicleDocs.expiring30d')}</div><div className="text-2xl font-bold">{stats.expiring}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><FileText className="h-5 w-5 text-slate-600" /><div className="text-sm text-muted-foreground">{t('vehicleDocs.missing')}</div><div className="text-2xl font-bold">{stats.missing}</div></CardContent></Card>
+          <Card><CardContent className="p-4"><ShieldCheck className="h-5 w-5 text-emerald-600" /><div className="text-sm text-muted-foreground">{t('vehicleDocs.valid')}</div><div className="text-2xl font-bold">{stats.valid}</div></CardContent></Card>
         </div>
 
         <Card className="print:hidden">
@@ -145,11 +162,11 @@ export default function VehicleDocumentsDashboardPage() {
             <Select value={risk} onValueChange={setRisk}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All risks</SelectItem>
-                <SelectItem value="expired">Expired</SelectItem>
-                <SelectItem value="expiring">Expiring</SelectItem>
-                <SelectItem value="missing">Missing</SelectItem>
-                <SelectItem value="valid">Valid</SelectItem>
+                <SelectItem value="all">{t('vehicleDocs.allRisks')}</SelectItem>
+                <SelectItem value="expired">{t('vehicleDocs.expired')}</SelectItem>
+                <SelectItem value="expiring">{t('common.expiring')}</SelectItem>
+                <SelectItem value="missing">{t('vehicleDocs.missing')}</SelectItem>
+                <SelectItem value="valid">{t('vehicleDocs.valid')}</SelectItem>
               </SelectContent>
             </Select>
           </CardContent>
@@ -164,11 +181,11 @@ export default function VehicleDocumentsDashboardPage() {
                     <Link to={`/vehicles/${v.id}`} className="font-bold text-primary hover:underline">{v.vehicle_code}</Link>
                     <div className="text-sm text-muted-foreground">{v.plate_no}</div>
                   </div>
-                  <Badge variant={v.worst === 'expired' ? 'destructive' : v.worst === 'expiring' ? 'secondary' : 'outline'}>{v.worst}</Badge>
+                  <Badge variant={v.worst === 'expired' ? 'destructive' : v.worst === 'expiring' ? 'secondary' : 'outline'}>{riskLabel(v.worst, t)}</Badge>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {docBadge(v.insuranceDays, 'Insurance')}
-                  {docBadge(v.registrationDays, 'Registration')}
+                  {docBadge(v.insuranceDays, t('vehicleDocs.insurance'), t)}
+                  {docBadge(v.registrationDays, t('vehicleDocs.registration'), t)}
                 </div>
               </CardContent>
             </Card>
@@ -184,7 +201,7 @@ export default function VehicleDocumentsDashboardPage() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={headers.length} className="p-8 text-center text-muted-foreground">Loading...</td></tr>
+                <tr><td colSpan={headers.length} className="p-8 text-center text-muted-foreground">{t('common.loading')}</td></tr>
               ) : filtered.map((v) => (
                 <tr key={v.id} className="border-t">
                   <td className="px-4 py-3"><Link to={`/vehicles/${v.id}`} className="font-medium text-primary">{v.vehicle_code}</Link></td>
@@ -196,7 +213,7 @@ export default function VehicleDocumentsDashboardPage() {
                   <td className="px-4 py-3">{v.registration_no || '—'}</td>
                   <td className="px-4 py-3">{v.registration_end_date || '—'}</td>
                   <td className="px-4 py-3">{v.registrationDays ?? '—'}</td>
-                  <td className="px-4 py-3"><Badge variant={v.worst === 'expired' ? 'destructive' : v.worst === 'expiring' ? 'secondary' : 'outline'}>{v.worst}</Badge></td>
+                  <td className="px-4 py-3"><Badge variant={v.worst === 'expired' ? 'destructive' : v.worst === 'expiring' ? 'secondary' : 'outline'}>{riskLabel(v.worst, t)}</Badge></td>
                 </tr>
               ))}
             </tbody>

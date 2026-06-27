@@ -207,9 +207,9 @@ export default function DashboardPage() {
       });
 
       const fleetStatusData: FleetStatusData[] = [
-        { name: 'Active', value: statusCounts['Active'] || 0, color: 'hsl(173, 80%, 40%)' },
-        { name: 'Maintenance', value: statusCounts['Maintenance'] || 0, color: 'hsl(38, 92%, 50%)' },
-        { name: 'Out of Service', value: statusCounts['OutOfService'] || 0, color: 'hsl(0, 84%, 60%)' },
+        { name: t('vehicles.statusActive'), value: statusCounts['Active'] || 0, color: 'hsl(173, 80%, 40%)' },
+        { name: t('vehicles.statusMaintenance'), value: statusCounts['Maintenance'] || 0, color: 'hsl(38, 92%, 50%)' },
+        { name: t('vehicles.statusOutOfService'), value: statusCounts['OutOfService'] || 0, color: 'hsl(0, 84%, 60%)' },
       ].filter(item => item.value > 0);
 
       setFleetStatus(fleetStatusData);
@@ -345,7 +345,7 @@ export default function DashboardPage() {
     };
 
     fetchDashboardData();
-  }, [profile, hasPermission, hasAnyPermission]);
+  }, [profile, hasPermission, hasAnyPermission, t]);
 
   const canCreateTrip = hasPermission('trips.create');
   const canViewApprovals = hasAnyPermission(['trips.approve', 'trips.reject']);

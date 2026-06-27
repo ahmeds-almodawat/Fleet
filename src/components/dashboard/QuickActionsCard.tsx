@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, ClipboardCheck, Car, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface QuickAction {
   title: string;
@@ -25,34 +26,35 @@ export function QuickActionsCard({
   canViewVehicles, 
   pendingApprovals 
 }: QuickActionsCardProps) {
+  const { t } = useTranslation();
   const actions: (QuickAction | null)[] = [
     canCreateTrip ? {
-      title: 'New Trip',
-      description: 'Start a new trip request',
+      title: t('trips.newTrip'),
+      description: t('dashboard.startNewTrip'),
       icon: Plus,
       href: '/trips/new',
       color: 'bg-gradient-to-br from-primary to-accent',
       iconColor: 'text-white',
     } : null,
     canViewApprovals && pendingApprovals > 0 ? {
-      title: 'Approvals',
-      description: `${pendingApprovals} pending`,
+      title: t('nav.approvals'),
+      description: t('dashboard.pendingCount', { count: pendingApprovals }),
       icon: ClipboardCheck,
       href: '/approvals',
       color: 'bg-gradient-to-br from-amber-500 to-orange-500',
       iconColor: 'text-white',
     } : null,
     canViewVehicles ? {
-      title: 'Vehicles',
-      description: 'Manage fleet',
+      title: t('nav.vehicles'),
+      description: t('dashboard.manageFleet'),
       icon: Car,
       href: '/vehicles',
       color: 'bg-gradient-to-br from-blue-500 to-cyan-500',
       iconColor: 'text-white',
     } : null,
     {
-      title: 'Reports',
-      description: 'View analytics',
+      title: t('nav.reports'),
+      description: t('dashboard.viewAnalytics'),
       icon: FileText,
       href: '/reports',
       color: 'bg-gradient-to-br from-emerald-500 to-teal-500',
@@ -63,7 +65,7 @@ export function QuickActionsCard({
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+        <CardTitle className="text-lg font-semibold">{t('dashboard.quickActions')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-3">

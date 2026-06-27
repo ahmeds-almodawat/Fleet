@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 interface TripsTrendChartProps {
   data: {
@@ -10,10 +11,11 @@ interface TripsTrendChartProps {
 }
 
 export function TripsTrendChart({ data }: TripsTrendChartProps) {
+  const { t } = useTranslation();
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Trips This Week</CardTitle>
+        <CardTitle className="text-lg font-semibold">{t('dashboard.tripsThisWeek')}</CardTitle>
       </CardHeader>
       <CardContent>
         {data.length > 0 ? (
@@ -59,7 +61,7 @@ export function TripsTrendChart({ data }: TripsTrendChartProps) {
           </div>
         ) : (
           <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-            No trip data for this week
+            {t('dashboard.noTripDataWeek')}
           </div>
         )}
       </CardContent>

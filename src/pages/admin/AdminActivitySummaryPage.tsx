@@ -57,12 +57,12 @@ export default function AdminActivitySummaryPage() {
 
   const actionCounts = useMemo(() => countBy(data, (r) => r.action), [data]);
   const entityCounts = useMemo(() => countBy(data, (r) => r.entity_type), [data]);
-  const actorCounts = useMemo(() => countBy(data, (r) => isRtl ? (r.actor?.name_ar || r.actor?.name_en || 'System') : (r.actor?.name_en || r.actor?.name_ar || 'System')), [data, isRtl]);
+  const actorCounts = useMemo(() => countBy(data, (r) => isRtl ? (r.actor?.name_ar || r.actor?.name_en || t('adminActivity.system')) : (r.actor?.name_en || r.actor?.name_ar || t('adminActivity.system'))), [data, isRtl]);
   const exports = data.filter((r) => r.action?.includes('export')).length;
   const securityActions = data.filter((r) => ['users', 'roles', 'settings', 'audit'].some((k) => r.action?.includes(k) || r.entity_type?.includes(k))).length;
 
-  const headers = ['Time', 'Actor', 'Action', 'Entity', 'Summary'];
-  const rows = data.map((r) => [new Date(r.created_at).toLocaleString(), isRtl ? (r.actor?.name_ar || r.actor?.name_en || 'System') : (r.actor?.name_en || r.actor?.name_ar || 'System'), r.action, r.entity_type || '', r.summary || '']);
+  const headers = [t('audit.time'), t('audit.actor'), t('audit.action'), t('audit.entity'), t('audit.summary')];
+  const rows = data.map((r) => [new Date(r.created_at).toLocaleString(), isRtl ? (r.actor?.name_ar || r.actor?.name_en || t('adminActivity.system')) : (r.actor?.name_en || r.actor?.name_ar || t('adminActivity.system')), r.action, r.entity_type || '', r.summary || '']);
 
   return (
     <MainLayout>
@@ -74,7 +74,7 @@ export default function AdminActivitySummaryPage() {
           <Button variant="outline" onClick={() => downloadCsvFile(`admin_activity_${new Date().toISOString().slice(0, 10)}.csv`, headers, rows)}>
             <Download className="h-4 w-4" /> CSV
           </Button>
-          <Button variant="outline" onClick={() => downloadExcelHtml(`admin_activity_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: 'Admin Activity', headers, rows }])}>
+          <Button variant="outline" onClick={() => downloadExcelHtml(`admin_activity_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: t('adminActivity.title'), headers, rows }])}>
             <FileSpreadsheet className="h-4 w-4" /> Excel
           </Button>
           <Button variant="outline" onClick={printCurrentPage}>
@@ -88,32 +88,32 @@ export default function AdminActivitySummaryPage() {
           <Select value={range} onValueChange={setRange}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">Last 24 hours</SelectItem>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
+              <SelectItem value="1">{t('common.last24h')}</SelectItem>
+              <SelectItem value="7">{t('common.last7d')}</SelectItem>
+              <SelectItem value="30">{t('common.last30d')}</SelectItem>
+              <SelectItem value="90">{t('common.last90d')}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card><CardContent className="p-4"><Activity className="h-5 w-5 text-blue-600" /><div className="text-sm text-muted-foreground">Events</div><div className="text-2xl font-bold">{data.length}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><Users className="h-5 w-5 text-emerald-600" /><div className="text-sm text-muted-foreground">Actors</div><div className="text-2xl font-bold">{actorCounts.length}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><Download className="h-5 w-5 text-purple-600" /><div className="text-sm text-muted-foreground">Exports</div><div className="text-2xl font-bold">{exports}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><ShieldAlert className="h-5 w-5 text-amber-600" /><div className="text-sm text-muted-foreground">Sensitive</div><div className="text-2xl font-bold">{securityActions}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><Activity className="h-5 w-5 text-blue-600" /><div className="text-sm text-muted-foreground">{t('adminActivity.events')}</div><div className="text-2xl font-bold">{data.length}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><Users className="h-5 w-5 text-emerald-600" /><div className="text-sm text-muted-foreground">{t('adminActivity.actors')}</div><div className="text-2xl font-bold">{actorCounts.length}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><Download className="h-5 w-5 text-purple-600" /><div className="text-sm text-muted-foreground">{t('adminActivity.exports')}</div><div className="text-2xl font-bold">{exports}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><ShieldAlert className="h-5 w-5 text-amber-600" /><div className="text-sm text-muted-foreground">{t('adminActivity.sensitive')}</div><div className="text-2xl font-bold">{securityActions}</div></CardContent></Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>Top actors</CardTitle></CardHeader><CardContent className="space-y-2">{actorCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span>{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
-        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>Top actions</CardTitle></CardHeader><CardContent className="space-y-2">{actionCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span className="truncate">{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
-        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>Entities</CardTitle></CardHeader><CardContent className="space-y-2">{entityCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span>{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
+        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>{t('adminActivity.topActors')}</CardTitle></CardHeader><CardContent className="space-y-2">{actorCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span>{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
+        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>{t('adminActivity.topActions')}</CardTitle></CardHeader><CardContent className="space-y-2">{actionCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span className="truncate">{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
+        <Card className="border-0 shadow-sm"><CardHeader><CardTitle>{t('adminActivity.entities')}</CardTitle></CardHeader><CardContent className="space-y-2">{entityCounts.slice(0, 8).map(([name, count]) => <div key={name} className="flex justify-between gap-3"><span>{name}</span><Badge variant="outline">{count}</Badge></div>)}</CardContent></Card>
       </div>
 
       <Card className="border-0 shadow-sm mt-6">
-        <CardHeader><CardTitle>Recent activity</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t('adminActivity.recent')}</CardTitle></CardHeader>
         <CardContent className="space-y-3">
-          {isLoading ? <div className="text-muted-foreground">Loading...</div> : data.slice(0, 20).map((r) => (
+          {isLoading ? <div className="text-muted-foreground">{t('common.loading')}</div> : data.slice(0, 20).map((r) => (
             <div key={r.id} className="rounded-lg border p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="font-medium">{r.action}</div>

@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Search, User, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface UserProfile {
   id: string;
@@ -39,6 +40,7 @@ interface Department {
 }
 
 export default function UsersPage() {
+  const { t } = useTranslation();
   const { hasPermission } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -112,12 +114,12 @@ export default function UsersPage() {
       );
 
       if (error) {
-        toast.error('Failed to update roles');
+        toast.error(t('users.updateRolesFailed'));
         return;
       }
     }
 
-    toast.success('Roles updated successfully');
+    toast.success(t('users.updatedRoles'));
     setDialogOpen(false);
     fetchData();
   };
@@ -128,7 +130,7 @@ export default function UsersPage() {
 
   const handleCreateUser = async () => {
     if (!newEmail || !newPassword || !newStaffId || !newNameEn || !newNameAr || !newJobTitle) {
-      toast.error('Please fill required fields');
+      toast.error(t('common.missingFields'));
       return;
     }
     setCreating(true);
@@ -148,7 +150,7 @@ export default function UsersPage() {
         },
       });
       if (error) throw error;
-      toast.success('User created');
+      toast.success(t('users.created'));
       setCreateOpen(false);
       setNewEmail('');
       setNewPassword('');
@@ -174,7 +176,7 @@ export default function UsersPage() {
       .eq('id', user.id);
 
     if (error) {
-      toast.error('Failed to update user status');
+      toast.error(t('common.error'));
     } else {
       toast.success(user.active ? 'User deactivated' : 'User activated');
       fetchData();
@@ -214,7 +216,7 @@ export default function UsersPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search by name, staff ID, or job title..."
+              placeholder={t('users.searchPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -253,7 +255,7 @@ export default function UsersPage() {
                           </span>
                         ))}
                         {user.roles.length === 0 && (
-                          <span className="text-xs text-muted-foreground italic">No roles assigned</span>
+                          <span className="text-xs text-muted-foreground italic">{t('users.noRoles')}</span>
                         )}
                         {user.is_driver && (
                           <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-700 text-xs rounded-full">
@@ -295,10 +297,10 @@ export default function UsersPage() {
             <DialogTitle>Edit Roles for {editingUser?.name_en}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">Select the roles to assign to this user:</p>
+            <p className="text-sm text-muted-foreground">{t('users.selectRoles')}</p>
             <div className="flex items-center gap-2">
               <Checkbox checked={isDriver} onCheckedChange={(v: any) => setIsDriver(!!v)} />
-              <span className="text-sm">Driver</span>
+              <span className="text-sm">{t('users.driver')}</span>
             </div>
             <div className="space-y-3">
               {roles.map((role) => (
@@ -319,8 +321,8 @@ export default function UsersPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleSaveRoles}>Save Changes</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
+            <Button onClick={handleSaveRoles}>{t('users.saveChanges')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -329,40 +331,40 @@ export default function UsersPage() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Add User</DialogTitle>
+            <DialogTitle>{t('users.addUser')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>Email *</Label>
+                <Label>{t('users.email')} *</Label>
                 <Input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="user@company.com" />
               </div>
               <div className="space-y-2">
-                <Label>Temp Password *</Label>
-                <Input value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Temporary password" type="password" />
+                <Label>{t('users.tempPassword')} *</Label>
+                <Input value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder={t('users.tempPassword')} type="password" />
               </div>
               <div className="space-y-2">
-                <Label>Staff ID *</Label>
+                <Label>{t('users.staffId')} *</Label>
                 <Input value={newStaffId} onChange={(e) => setNewStaffId(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Job Title *</Label>
+                <Label>{t('users.jobTitle')} *</Label>
                 <Input value={newJobTitle} onChange={(e) => setNewJobTitle(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Name (EN) *</Label>
+                <Label>{t('users.nameEn')} *</Label>
                 <Input value={newNameEn} onChange={(e) => setNewNameEn(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label>Name (AR) *</Label>
+                <Label>{t('users.nameAr')} *</Label>
                 <Input value={newNameAr} onChange={(e) => setNewNameAr(e.target.value)} dir="rtl" />
               </div>
               <div className="space-y-2">
-                <Label>Phone</Label>
+                <Label>{t('users.phone')}</Label>
                 <Input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="05xxxxxxxx" />
               </div>
               <div className="space-y-2">
-                <Label>Department</Label>
+                <Label>{t('common.department')}</Label>
                 <Select value={newDeptId} onValueChange={setNewDeptId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select department" />
@@ -378,11 +380,11 @@ export default function UsersPage() {
 
             <div className="flex items-center gap-2">
               <Checkbox checked={newIsDriver} onCheckedChange={(v: any) => setNewIsDriver(!!v)} />
-              <span className="text-sm">Driver</span>
+              <span className="text-sm">{t('users.driver')}</span>
             </div>
 
             <div className="space-y-2">
-              <Label>Roles</Label>
+              <Label>{t('users.roles')}</Label>
               <div className="grid grid-cols-2 gap-2">
                 {roles.map((role) => (
                   <label key={role.id} className="flex items-center gap-2 text-sm">
@@ -394,7 +396,7 @@ export default function UsersPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setCreateOpen(false)}>{t('common.cancel')}</Button>
             <Button onClick={handleCreateUser} disabled={creating}>
               {creating ? 'Creating…' : 'Create'}
             </Button>

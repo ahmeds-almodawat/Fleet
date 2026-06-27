@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 interface FleetStatusChartProps {
   data: {
@@ -10,12 +11,13 @@ interface FleetStatusChartProps {
 }
 
 export function FleetStatusChart({ data }: FleetStatusChartProps) {
+  const { t } = useTranslation();
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Fleet Status</CardTitle>
+        <CardTitle className="text-lg font-semibold">{t('dashboard.fleetStatus')}</CardTitle>
       </CardHeader>
       <CardContent>
         {total > 0 ? (
@@ -53,7 +55,7 @@ export function FleetStatusChart({ data }: FleetStatusChartProps) {
           </div>
         ) : (
           <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-            No vehicle data available
+            {t('dashboard.noVehicleData')}
           </div>
         )}
       </CardContent>

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Trophy, Medal, Award, Route, Gauge } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface DriverStats {
   id: string;
@@ -22,11 +23,12 @@ const rankIcons = [
 ];
 
 export function DriverLeaderboard({ drivers, loading }: DriverLeaderboardProps) {
+  const { t } = useTranslation();
   if (loading) {
     return (
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Top Drivers</CardTitle>
+          <CardTitle className="text-lg font-semibold">{t('dashboard.topDrivers')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -49,11 +51,11 @@ export function DriverLeaderboard({ drivers, loading }: DriverLeaderboardProps) 
     return (
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Top Drivers</CardTitle>
+          <CardTitle className="text-lg font-semibold">{t('dashboard.topDrivers')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            No driver data available yet
+            {t('dashboard.noDriverData')}
           </div>
         </CardContent>
       </Card>
@@ -65,7 +67,7 @@ export function DriverLeaderboard({ drivers, loading }: DriverLeaderboardProps) 
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-500" />
-          Top Drivers
+          {t('dashboard.topDrivers')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -111,7 +113,7 @@ export function DriverLeaderboard({ drivers, loading }: DriverLeaderboardProps) 
                   <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
                     <span className="flex items-center gap-1">
                       <Route className="w-3 h-3" />
-                      {driver.tripsCompleted} trips
+                      {t('dashboard.driverTrips', { count: driver.tripsCompleted })}
                     </span>
                     <span className="flex items-center gap-1">
                       <Gauge className="w-3 h-3" />

@@ -45,11 +45,11 @@ function progressFor(status: string) {
 }
 
 function nextAction(status: string) {
-  if (status === 'Draft') return { label: 'Submit request', icon: ClipboardList };
-  if (status === 'PendingApproval') return { label: 'Waiting for approval', icon: Timer };
-  if (status === 'Approved') return { label: 'Start / close trip', icon: PlayCircle };
-  if (status === 'Active' || status === 'InProgress') return { label: 'Close with odometer photo', icon: Camera };
-  return { label: 'Review completed trip', icon: CheckCircle2 };
+  if (status === 'Draft') return { key: 'driverWizard.action.submit', icon: ClipboardList };
+  if (status === 'PendingApproval') return { key: 'driverWizard.action.waiting', icon: Timer };
+  if (status === 'Approved') return { key: 'driverWizard.action.startClose', icon: PlayCircle };
+  if (status === 'Active' || status === 'InProgress') return { key: 'driverWizard.action.closePhoto', icon: Camera };
+  return { key: 'driverWizard.action.review', icon: CheckCircle2 };
 }
 
 function formatDate(value: string | null, isRtl: boolean) {
@@ -159,7 +159,7 @@ export default function DriverTripWizardPage() {
                   </div>
                   <div className="rounded-lg bg-muted/40 p-3">
                     <div className="text-muted-foreground">{t('driverWizard.nextAction', { defaultValue: 'Next action' })}</div>
-                    <div className="font-semibold">{nextAction(latest.status).label}</div>
+                    <div className="font-semibold">{t(nextAction(latest.status).key)}</div>
                   </div>
                 </div>
 

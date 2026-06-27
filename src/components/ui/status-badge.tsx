@@ -26,7 +26,7 @@ const statusConfig: Record<string, { fallbackLabel: string; className: string }>
 export function StatusBadge({ status, className }: StatusBadgeProps) {
   const { t } = useTranslation();
   const config = statusConfig[status] || { fallbackLabel: String(status), className: 'status-badge-draft' };
-  const label = t(`status.${String(status)}`, config.fallbackLabel);
+  const label = t(`status.${String(status)}`, { defaultValue: config.fallbackLabel });
   
   return (
     <span className={cn('status-badge', config.className, className)}>

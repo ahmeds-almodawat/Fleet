@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import i18n from "@/i18n";
+import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -85,6 +86,7 @@ interface TripRecord {
 }
 
 export default function VehicleDetailsPage() {
+  const { t } = useTranslation();
   const isRtl = i18n.language?.startsWith('ar');
   const vehicleTypeLabel = (vt: any) => {
     if (!vt) return '';
@@ -136,11 +138,11 @@ export default function VehicleDetailsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Active':
-        return <Badge className="bg-status-success">Active</Badge>;
+        return <Badge className="bg-status-success">{t('vehicles.statusActive')}</Badge>;
       case 'Maintenance':
-        return <Badge className="bg-status-warning">Maintenance</Badge>;
+        return <Badge className="bg-status-warning">{t('vehicles.statusMaintenance')}</Badge>;
       case 'OutOfService':
-        return <Badge variant="destructive">Out of Service</Badge>;
+        return <Badge variant="destructive">{t('vehicles.statusOutOfService')}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -148,24 +150,24 @@ export default function VehicleDetailsPage() {
 
   const getMaintenanceStatusBadge = (record: MaintenanceRecord) => {
     if (record.status === 'Completed') {
-      return <Badge className="bg-status-success">Completed</Badge>;
+      return <Badge className="bg-status-success">{t('maintenance.status.completed')}</Badge>;
     }
     if (record.status === 'Cancelled') {
-      return <Badge variant="secondary">Cancelled</Badge>;
+      return <Badge variant="secondary">{t('maintenance.status.cancelled')}</Badge>;
     }
     
     if (record.scheduled_date) {
       const scheduledDate = new Date(record.scheduled_date);
       if (isPast(scheduledDate) && !isToday(scheduledDate)) {
-        return <Badge variant="destructive">Overdue</Badge>;
+        return <Badge variant="destructive">{t('maintenance.status.overdue')}</Badge>;
       }
       const daysUntil = differenceInDays(scheduledDate, new Date());
       if (daysUntil <= 7) {
-        return <Badge className="bg-status-warning">Due Soon</Badge>;
+        return <Badge className="bg-status-warning">{t('maintenance.status.dueSoon')}</Badge>;
       }
     }
     
-    return <Badge variant="outline">Scheduled</Badge>;
+    return <Badge variant="outline">{t('maintenance.status.scheduled')}</Badge>;
   };
 
   const upcomingMaintenance = maintenance.filter(m => 
@@ -189,9 +191,9 @@ export default function VehicleDetailsPage() {
     return (
       <MainLayout>
         <div className="text-center py-12">
-          <p className="text-muted-foreground">Vehicle not found</p>
+          <p className="text-muted-foreground">{t('vehicles.notFound')}</p>
           <Button asChild className="mt-4">
-            <Link to="/vehicles">Back to Vehicles</Link>
+            <Link to="/vehicles">{t('vehicles.backToVehicles')}</Link>
           </Button>
         </div>
       </MainLayout>
@@ -204,13 +206,13 @@ export default function VehicleDetailsPage() {
         <Button variant="ghost" asChild className="mb-4">
           <Link to="/vehicles">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Vehicles
+            {t('vehicles.backToVehicles')}
           </Link>
         </Button>
         
         <PageHeader 
           title={vehicle.vehicle_code}
-          description={`${vehicle.plate_no} • ${vehicle.vehicle_type?.name || 'Unknown Type'}`}
+          description={`${vehicle.plate_no} • ${vehicleTypeLabel(vehicle.vehicle_type) || t('vehicles.unknownType')}`}
         />
       </div>
 
@@ -238,20 +240,20 @@ export default function VehicleDetailsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Plate Number</p>
+                    <p className="text-muted-foreground">{t('vehicles.plateNumber')}</p>
                     <p className="font-medium">{vehicle.plate_no}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Vehicle Type</p>
+                    <p className="text-muted-foreground">{t('vehicles.type')}</p>
                     <p className="font-medium">{vehicle.vehicle_type?.name || '-'}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Department</p>
+                    <p className="text-muted-foreground">{t('common.department')}</p>
                     <p className="font-medium">{vehicle.department?.name || '-'}</p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Approvals Required</p>
-                    <p className="font-medium">{vehicle.approvals_required ? 'Yes' : 'No'}</p>
+                    <p className="text-muted-foreground">{t('vehicles.approvalsRequired')}</p>
+                    <p className="font-medium">{vehicle.approvals_required ? t('common.yes') : t('common.no')}</p>
                   </div>
                 </div>
 
@@ -259,7 +261,7 @@ export default function VehicleDetailsPage() {
                   <div className="p-4 rounded-xl border bg-muted/30">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-semibold">Insurance</p>
+                        <p className="text-sm font-semibold">{t('vehicles.insurance')}</p>
                         <p className="text-sm text-muted-foreground">
                           {vehicle.insurance_policy_no || '-'}
                         </p>
@@ -281,7 +283,7 @@ export default function VehicleDetailsPage() {
                   <div className="p-4 rounded-xl border bg-muted/30">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-semibold">Registration</p>
+                        <p className="text-sm font-semibold">{t('vehicles.registration')}</p>
                         <p className="text-sm text-muted-foreground">
                           {vehicle.registration_no || '-'}
                         </p>
@@ -303,7 +305,7 @@ export default function VehicleDetailsPage() {
 
                 {vehicle.notes && (
                   <div>
-                    <p className="text-muted-foreground text-sm">Notes</p>
+                    <p className="text-muted-foreground text-sm">{t('common.notes')}</p>
                     <p className="text-sm">{vehicle.notes}</p>
                   </div>
                 )}
@@ -322,7 +324,7 @@ export default function VehicleDetailsPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{vehicle.current_odometer.toLocaleString()} km</p>
-                  <p className="text-sm text-muted-foreground">Current Odometer</p>
+                  <p className="text-sm text-muted-foreground">{t('vehicles.currentOdometer')}</p>
                 </div>
               </div>
             </CardContent>
@@ -336,7 +338,7 @@ export default function VehicleDetailsPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{totalDistance.toLocaleString()} km</p>
-                  <p className="text-sm text-muted-foreground">Total Distance ({trips.length} trips)</p>
+                  <p className="text-sm text-muted-foreground">{t('vehicles.totalDistance')} ({t('dashboard.driverTrips', { count: trips.length })})</p>
                 </div>
               </div>
             </CardContent>
@@ -350,7 +352,7 @@ export default function VehicleDetailsPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">${totalMaintenanceCost.toLocaleString()}</p>
-                  <p className="text-sm text-muted-foreground">Total Maintenance Cost</p>
+                  <p className="text-sm text-muted-foreground">{t('vehicles.totalMaintenanceCost')}</p>
                 </div>
               </div>
             </CardContent>
@@ -364,7 +366,7 @@ export default function VehicleDetailsPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-status-warning" />
-              Upcoming Maintenance ({upcomingMaintenance.length})
+              {t('vehicles.upcomingMaintenance')} ({upcomingMaintenance.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -399,15 +401,15 @@ export default function VehicleDetailsPage() {
             <TabsList className="mb-4">
               <TabsTrigger value="timeline" className="gap-2">
                 <Calendar className="w-4 h-4" />
-                Timeline
+                {t('vehicles.timeline')}
               </TabsTrigger>
               <TabsTrigger value="maintenance" className="gap-2">
                 <Wrench className="w-4 h-4" />
-                Maintenance History
+                {t('vehicles.maintenanceHistory')}
               </TabsTrigger>
               <TabsTrigger value="trips" className="gap-2">
                 <Route className="w-4 h-4" />
-                Trip History
+                {t('vehicles.tripHistory')}
               </TabsTrigger>
             </TabsList>
 
@@ -415,25 +417,25 @@ export default function VehicleDetailsPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-4">
-                    <div className="text-xs text-muted-foreground">Trips (last 20)</div>
+                    <div className="text-xs text-muted-foreground">{t('vehicles.tripsLast20')}</div>
                     <div className="text-2xl font-bold">{trips.length}</div>
                   </CardContent>
                 </Card>
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-4">
-                    <div className="text-xs text-muted-foreground">Distance</div>
+                    <div className="text-xs text-muted-foreground">{t('trips.totalDistance')}</div>
                     <div className="text-2xl font-bold">{Math.round(totalDistance).toLocaleString()} km</div>
                   </CardContent>
                 </Card>
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-4">
-                    <div className="text-xs text-muted-foreground">Upcoming Maintenance</div>
+                    <div className="text-xs text-muted-foreground">{t('vehicles.upcomingMaintenance')}</div>
                     <div className="text-2xl font-bold">{upcomingMaintenance.length}</div>
                   </CardContent>
                 </Card>
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-4">
-                    <div className="text-xs text-muted-foreground">Maintenance Cost (Completed)</div>
+                    <div className="text-xs text-muted-foreground">{t('vehicles.maintenanceCostCompleted')}</div>
                     <div className="text-2xl font-bold">{totalMaintenanceCost.toLocaleString()} SAR</div>
                   </CardContent>
                 </Card>
@@ -446,17 +448,17 @@ export default function VehicleDetailsPage() {
               {maintenance.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <History className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No maintenance records</p>
+                  <p>{t('vehicles.noMaintenanceRecords')}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Odometer</TableHead>
-                      <TableHead>Cost</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>{t('vehicles.service')}</TableHead>
+                      <TableHead>{t('common.date')}</TableHead>
+                      <TableHead>{t('trips.odometer')}</TableHead>
+                      <TableHead>{t('maintenance.table.cost')}</TableHead>
+                      <TableHead>{t('common.status')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -490,18 +492,18 @@ export default function VehicleDetailsPage() {
               {trips.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <Route className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No trip records</p>
+                  <p>{t('vehicles.noTripRecords')}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Trip #</TableHead>
-                      <TableHead>Destination</TableHead>
-                      <TableHead>Driver</TableHead>
-                      <TableHead>Distance</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>{t('vehicles.tripNumber')}</TableHead>
+                      <TableHead>{t('trips.destination')}</TableHead>
+                      <TableHead>{t('trips.driver')}</TableHead>
+                      <TableHead>{t('trips.totalDistance')}</TableHead>
+                      <TableHead>{t('common.date')}</TableHead>
+                      <TableHead>{t('common.status')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -522,7 +524,7 @@ export default function VehicleDetailsPage() {
                         </TableCell>
                         <TableCell>
                           <Badge variant={trip.status === 'Closed' ? 'default' : 'outline'}>
-                            {trip.status}
+                            {t(`status.${trip.status}`, { defaultValue: trip.status })}
                           </Badge>
                         </TableCell>
                       </TableRow>

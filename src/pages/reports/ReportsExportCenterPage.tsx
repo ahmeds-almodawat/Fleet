@@ -58,24 +58,24 @@ export default function ReportsExportCenterPage() {
     const report = data || { trips: [], vehicles: [], maintenance: [], notifications: [] };
     return [
       {
-        name: 'Trips',
-        headers: ['Trip No', 'Status', 'Vehicle', 'Plate', 'Destination', 'Purpose', 'Driver', 'Distance KM', 'Requested', 'Closed'],
+        name: t('reports.exportCenter.trips'),
+        headers: [t('trips.tripNo'), t('common.status'), t('vehicles.vehicle'), t('vehicles.plate'), t('trips.destination'), t('trips.purpose'), t('trips.driver'), 'KM', t('trips.details.requested'), t('status.Closed')],
         rows: report.trips.map((r) => [r.trip_no, r.status, r.vehicle?.vehicle_code, r.vehicle?.plate_no, r.destination_text, r.purpose, r.driver?.name_en || r.driver?.name_ar, r.distance_km, r.requested_at, r.closed_at]),
       },
       {
-        name: 'Vehicles',
-        headers: ['Vehicle', 'Plate', 'Status', 'Odometer', 'Insurance End', 'Registration End', 'Department'],
+        name: t('reports.exportCenter.vehicles'),
+        headers: [t('vehicles.vehicle'), t('vehicles.plate'), t('common.status'), t('trips.odometer'), t('vehicles.insuranceEnd'), t('vehicles.registrationEnd'), t('common.department')],
         rows: report.vehicles.map((r) => [r.vehicle_code, r.plate_no, r.status, r.current_odometer, r.insurance_end_date, r.registration_end_date, r.department?.name]),
       },
       {
-        name: 'Maintenance',
-        headers: ['Vehicle', 'Plate', 'Type', 'Description', 'Scheduled', 'Completed', 'Status', 'Cost'],
+        name: t('reports.exportCenter.maintenance'),
+        headers: [t('vehicles.vehicle'), t('vehicles.plate'), t('vehicles.type'), t('common.description'), t('maintenance.status.scheduled'), t('maintenance.status.completed'), t('common.status'), t('maintenance.table.cost')],
         rows: report.maintenance.map((r) => [r.vehicle?.vehicle_code, r.vehicle?.plate_no, r.custom_type_name, r.description, r.scheduled_date, r.completed_date, r.status, r.cost]),
       },
       {
-        name: 'Notifications',
-        headers: ['Title', 'Body', 'Severity', 'Read', 'Created'],
-        rows: report.notifications.map((r) => [r.title, r.body, r.severity, r.is_read ? 'Yes' : 'No', r.created_at]),
+        name: t('reports.exportCenter.notifications'),
+        headers: [t('notifications.title'), t('common.description'), t('common.status'), t('notifications.read'), t('common.createdAt')],
+        rows: report.notifications.map((r) => [r.title, r.body, r.severity, r.is_read ? t('common.yes') : t('common.no'), r.created_at]),
       },
     ];
   };
@@ -111,32 +111,32 @@ export default function ReportsExportCenterPage() {
           <Select value={range} onValueChange={setRange}>
             <SelectTrigger className="w-full sm:w-48"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-              <SelectItem value="365">Last year</SelectItem>
+              <SelectItem value="7">{t('common.last7d')}</SelectItem>
+              <SelectItem value="30">{t('common.last30d')}</SelectItem>
+              <SelectItem value="90">{t('common.last90d')}</SelectItem>
+              <SelectItem value="365">{t('common.lastYear')}</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={load} disabled={loading}>
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            Load report pack
+            {t('common.loadReportPack')}
           </Button>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Trips</div><div className="text-2xl font-bold">{totalTrips}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Vehicles</div><div className="text-2xl font-bold">{totalVehicles}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Maintenance</div><div className="text-2xl font-bold">{totalMaintenance}</div></CardContent></Card>
-        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">Notifications</div><div className="text-2xl font-bold">{totalNotifications}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">{t('reports.exportCenter.trips')}</div><div className="text-2xl font-bold">{totalTrips}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">{t('reports.exportCenter.vehicles')}</div><div className="text-2xl font-bold">{totalVehicles}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">{t('reports.exportCenter.maintenance')}</div><div className="text-2xl font-bold">{totalMaintenance}</div></CardContent></Card>
+        <Card><CardContent className="p-4"><div className="text-sm text-muted-foreground">{t('reports.exportCenter.notifications')}</div><div className="text-2xl font-bold">{totalNotifications}</div></CardContent></Card>
       </div>
 
       <Card className="border-0 shadow-sm">
-        <CardHeader><CardTitle>Export Pack Contents</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t('reports.exportCenter.contentsTitle')}</CardTitle></CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-          <p>Excel export includes four sheets: Trips, Vehicles, Maintenance, and Notifications.</p>
-          <p>PDF export uses the browser print dialog. Choose “Save as PDF”.</p>
-          {!data && <p className="font-medium text-foreground">Click “Load report pack” first.</p>}
+          <p>{t('reports.exportCenter.contentsLine1')}</p>
+          <p>{t('reports.exportCenter.contentsLine2')}</p>
+          {!data && <p className="font-medium text-foreground">Click “{t('common.loadReportPack')}” first.</p>}
         </CardContent>
       </Card>
     </MainLayout>

@@ -25,12 +25,12 @@ type Row = {
 };
 
 function monthKey(date?: string | null) {
-  if (!date) return 'No date';
+  if (!date) return 'no-date';
   return date.slice(0, 7);
 }
 
-function monthLabel(key: string, locale: string) {
-  if (key === 'No date') return key;
+function monthLabel(key: string, locale: string, t: (key: string) => string) {
+  if (key === 'no-date') return t('maintenance.calendar.noDate');
   try {
     return new Date(`${key}-01T00:00:00`).toLocaleDateString(locale, { year: 'numeric', month: 'long' });
   } catch {
@@ -82,14 +82,14 @@ export default function MaintenanceCalendarPage() {
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [filtered]);
 
-  const headers = ['Month', 'Date', 'Vehicle', 'Plate', 'Department', 'Type', 'Description', 'Status', 'Days Until', 'Cost'];
+  const headers = [t('reports.month'), t('common.date'), t('vehicles.vehicle'), t('vehicles.plate'), t('common.department'), t('vehicles.type'), t('common.description'), t('common.status'), t('maintenance.calendar.daysUntil'), t('maintenance.table.cost')];
   const exportRows = filtered.map((r) => [
-    monthLabel(monthKey(r.scheduled_date || r.completed_date), 'en-US'),
+    monthLabel(monthKey(r.scheduled_date || r.completed_date), locale, t),
     r.scheduled_date || r.completed_date || '',
     r.vehicle?.vehicle_code || '',
     r.vehicle?.plate_no || '',
     r.vehicle?.department?.name || '',
-    r.custom_type_name || r.description || 'Maintenance',
+    r.custom_type_name || r.description || t('nav.maintenance'),
     r.description || '',
     r.status,
     daysUntil(r.scheduled_date) ?? '',
@@ -106,7 +106,7 @@ export default function MaintenanceCalendarPage() {
           <Button variant="outline" onClick={() => downloadCsvFile(`maintenance_calendar_${new Date().toISOString().slice(0, 10)}.csv`, headers, exportRows)}>
             <Download className="h-4 w-4" /> CSV
           </Button>
-          <Button variant="outline" onClick={() => downloadExcelHtml(`maintenance_calendar_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: 'Maintenance Calendar', headers, rows: exportRows }])}>
+          <Button variant="outline" onClick={() => downloadExcelHtml(`maintenance_calendar_${new Date().toISOString().slice(0, 10)}.xls`, [{ name: t('maintenance.calendar.title'), headers, rows: exportRows }])}>
             <FileSpreadsheet className="h-4 w-4" /> Excel
           </Button>
           <Button variant="outline" onClick={printCurrentPage}>
@@ -120,12 +120,12 @@ export default function MaintenanceCalendarPage() {
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="open">Open only</SelectItem>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="Scheduled">Scheduled</SelectItem>
-              <SelectItem value="InProgress">In progress</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
-              <SelectItem value="Cancelled">Cancelled</SelectItem>
+              <SelectItem value="open">{t('maintenance.calendar.openOnly')}</SelectItem>
+              <SelectItem value="all">{t('common.all')}</SelectItem>
+              <SelectItem value="Scheduled">{t('maintenance.status.scheduled')}</SelectItem>
+              <SelectItem value="InProgress">{t('maintenance.status.inProgress')}</SelectItem>
+              <SelectItem value="Completed">{t('maintenance.status.completed')}</SelectItem>
+              <SelectItem value="Cancelled">{t('maintenance.status.cancelled')}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -134,7 +134,7 @@ export default function MaintenanceCalendarPage() {
       {loading ? (
         <div className="p-8 text-center text-muted-foreground">{t('common.loading', { defaultValue: 'Loading...' })}</div>
       ) : grouped.length === 0 ? (
-        <div className="p-8 text-center text-muted-foreground">No maintenance records found.</div>
+        <div className="p-8 text-center text-muted-foreground">{t('maintenance.calendar.noRecords')}</div>
       ) : (
         <div className="space-y-6">
           {grouped.map(([key, items]) => (
@@ -142,7 +142,7 @@ export default function MaintenanceCalendarPage() {
               <CardHeader>
                 <CardTitle className={cn('flex items-center gap-2', isRtl && 'flex-row-reverse')}>
                   <CalendarDays className="h-5 w-5" />
-                  {monthLabel(key, locale)}
+                  {monthLabel(key, locale, t)}
                   <Badge variant="outline">{items.length}</Badge>
                 </CardTitle>
               </CardHeader>
@@ -153,8 +153,8 @@ export default function MaintenanceCalendarPage() {
                   return (
                     <div key={r.id} className="rounded-xl border p-4 grid gap-2 md:grid-cols-[1.2fr_1fr_1fr_auto] md:items-center">
                       <div>
-                        <div className="font-semibold">{r.scheduled_date || r.completed_date || 'No date'}</div>
-                        <div className="text-sm text-muted-foreground">{r.custom_type_name || r.description || 'Maintenance'}</div>
+                        <div className="font-semibold">{r.scheduled_date || r.completed_date || t('maintenance.calendar.noDate')}</div>
+                        <div className="text-sm text-muted-foreground">{r.custom_type_name || r.description || t('nav.maintenance')}</div>
                       </div>
                       <div>
                         <div className="font-medium">{r.vehicle?.vehicle_code || '—'}</div>
@@ -162,8 +162,8 @@ export default function MaintenanceCalendarPage() {
                       </div>
                       <div className="text-sm text-muted-foreground">{r.vehicle?.department?.name || '—'}</div>
                       <div className="flex items-center gap-2">
-                        <Badge variant={overdue ? 'destructive' : r.status === 'Completed' ? 'default' : 'outline'}>{r.status}</Badge>
-                        {due !== null && !['Completed', 'Cancelled'].includes(r.status) && <Badge variant="secondary">{due}d</Badge>}
+                        <Badge variant={overdue ? 'destructive' : r.status === 'Completed' ? 'default' : 'outline'}>{t(`maintenance.status.${r.status === 'InProgress' ? 'inProgress' : r.status.toLowerCase()}`, { defaultValue: r.status })}</Badge>
+                        {due !== null && !['Completed', 'Cancelled'].includes(r.status) && <Badge variant="secondary">{t('common.daysShort', { count: due })}</Badge>}
                         <Wrench className="h-4 w-4 text-muted-foreground" />
                       </div>
                     </div>

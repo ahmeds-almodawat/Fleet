@@ -542,7 +542,7 @@ export default function TripDetailsPage() {
                 </div>
                 {trip.end_odometer_photo_url && (
                   <div>
-                    <p className="text-sm text-muted-foreground mb-2">End Odometer</p>
+                    <p className="text-sm text-muted-foreground mb-2">{t('trips.endOdometer')}</p>
                     <img 
                       src={trip.end_odometer_photo_url} 
                       alt="End odometer" 
@@ -554,7 +554,7 @@ export default function TripDetailsPage() {
               </div>
               {trip.distance_km && (
                 <div className="mt-4 p-4 rounded-lg bg-muted text-center">
-                  <p className="text-sm text-muted-foreground">Total Distance</p>
+                  <p className="text-sm text-muted-foreground">{t('trips.totalDistance')}</p>
                   <p className="text-2xl font-semibold">{trip.distance_km.toLocaleString()} km</p>
                 </div>
               )}
@@ -595,11 +595,11 @@ export default function TripDetailsPage() {
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Reject Trip</DialogTitle>
+            <DialogTitle>{t('trips.rejectTrip')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Reason for rejection *</Label>
+              <Label>{t('trips.rejectReason')} *</Label>
               <Textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
@@ -609,7 +609,7 @@ export default function TripDetailsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>{t('common.cancel')}</Button>
             <Button variant="destructive" onClick={handleReject} disabled={!rejectReason || processing}>
               {processing && <Loader2 className={isRtl ? "w-4 h-4 ml-2 animate-spin" : "w-4 h-4 mr-2 animate-spin"} />}
               Reject Trip
@@ -626,7 +626,7 @@ export default function TripDetailsPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>End Odometer Reading (km) *</Label>
+              <Label>{t('trips.endOdometerReading')} *</Label>
               <Input
                 type="number"
                 value={endOdometer}
@@ -637,7 +637,7 @@ export default function TripDetailsPage() {
               />
               <div className="flex items-center justify-between gap-3">
                 {endOcrLoading ? (
-                  <p className="text-xs text-muted-foreground">OCR running…</p>
+                  <p className="text-xs text-muted-foreground">{t('trips.ocrRunning')}</p>
                 ) : endOcrConfidence !== null ? (
                   <p className="text-xs text-muted-foreground">OCR confidence: {endOcrConfidence}%</p>
                 ) : (
@@ -656,7 +656,7 @@ export default function TripDetailsPage() {
 
               {endOdometerDisputed && (
                 <div className="mt-2 space-y-2 rounded-lg border p-3">
-                  <Label className="text-xs">Enter correct end odometer (requires approval)</Label>
+                  <Label className="text-xs">{t('trips.correctEndOdometer')}</Label>
                   <Input
                     type="number"
                     value={endClaimedOdometer}
@@ -669,7 +669,7 @@ export default function TripDetailsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label>End Odometer Photo *</Label>
+              <Label>{t('trips.endOdometerPhoto')} *</Label>
               <div 
                 className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 active:bg-muted"
                 onClick={() => fileInputRef.current?.click()}
@@ -679,7 +679,7 @@ export default function TripDetailsPage() {
                 ) : (
                   <>
                     <Upload className="w-6 h-6 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">Click to upload</p>
+                    <p className="text-sm text-muted-foreground">{t('trips.clickUpload')}</p>
                   </>
                 )}
               </div>
@@ -699,7 +699,7 @@ export default function TripDetailsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCloseDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setCloseDialogOpen(false)}>{t('common.cancel')}</Button>
             <Button 
               onClick={handleCloseTrip} 
               disabled={

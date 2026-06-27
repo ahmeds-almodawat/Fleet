@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Fuel, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface FuelEfficiencyCardProps {
   totalTripsWithFuelData: number;
@@ -31,6 +32,7 @@ export function FuelEfficiencyCard({
   efficiencyTrend,
   loading,
 }: FuelEfficiencyCardProps) {
+  const { t } = useTranslation();
   const TrendIcon = efficiencyTrend?.direction === 'up'
     ? TrendingUp
     : efficiencyTrend?.direction === 'down'
@@ -75,7 +77,7 @@ export function FuelEfficiencyCard({
                 {avgFuelConsumption.toFixed(1)}%
               </p>
               <p className="text-sm text-muted-foreground">
-                avg. tank used per 100km
+                {t('dashboard.avgTankPer100')}
               </p>
             </div>
 
@@ -94,15 +96,15 @@ export function FuelEfficiencyCard({
                 </span>
               )}
               <span className="text-xs text-muted-foreground">
-                Based on {totalTripsWithFuelData} trips with fuel data
+                {t('dashboard.basedOnTripsWithFuel', { count: totalTripsWithFuelData })}
               </span>
             </div>
 
             {/* Fuel gauge visualization */}
             <div className="mt-4">
               <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Efficiency</span>
-                <span>{avgFuelConsumption < 15 ? 'Excellent' : avgFuelConsumption < 25 ? 'Good' : 'Needs Attention'}</span>
+                <span>{t('dashboard.efficiency')}</span>
+                <span>{avgFuelConsumption < 15 ? t('dashboard.excellent') : avgFuelConsumption < 25 ? t('dashboard.good') : t('dashboard.needsAttention')}</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
@@ -121,8 +123,8 @@ export function FuelEfficiencyCard({
           </div>
         ) : (
           <div className="text-center py-4 text-muted-foreground">
-            <p className="text-sm">No fuel data available</p>
-            <p className="text-xs mt-1">Complete trips with fuel levels to see efficiency metrics</p>
+            <p className="text-sm">{t('dashboard.noFuelData')}</p>
+            <p className="text-xs mt-1">{t('dashboard.completeFuelTrips')}</p>
           </div>
         )}
       </CardContent>

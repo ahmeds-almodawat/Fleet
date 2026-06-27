@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { useTranslation } from 'react-i18next';
 import { Route, ArrowRight } from 'lucide-react';
 
 interface RecentTrip {
@@ -19,13 +20,14 @@ interface RecentTripsCardProps {
 }
 
 export function RecentTripsCard({ trips, loading }: RecentTripsCardProps) {
+  const { t } = useTranslation();
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-semibold">Recent Trips</CardTitle>
+        <CardTitle className="text-lg font-semibold">{t('dashboard.recentTrips')}</CardTitle>
         <Link to="/trips">
           <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-            View All <ArrowRight className="w-4 h-4 ml-1" />
+            {t('dashboard.viewAll')} <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </Link>
       </CardHeader>
@@ -65,8 +67,8 @@ export function RecentTripsCard({ trips, loading }: RecentTripsCardProps) {
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <Route className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">No trips yet</p>
-            <p className="text-sm">Start your first trip to see it here</p>
+            <p className="font-medium">{t('dashboard.noTripsYet')}</p>
+            <p className="text-sm">{t('dashboard.startFirstTrip')}</p>
           </div>
         )}
       </CardContent>
