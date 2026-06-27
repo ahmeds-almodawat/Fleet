@@ -39,3 +39,6 @@ backup_schema.sql
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
+.env*
