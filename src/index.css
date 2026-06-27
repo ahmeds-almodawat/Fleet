@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Prevent double scrollbars with fixed sidebar layout */
+body {
+  overflow: auto;
+}
+
+/* Fleet Control Design System - Modern Dashboard Theme */
+
+@layer base {
+  :root {
+    /* Core palette - Clean white/slate with purple accent */
+    --background: 220 14% 96%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    /* Primary - Deep Indigo */
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Light gray */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 71% 4%;
+
+    /* Muted - Soft grays */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    /* Accent - Violet */
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Status colors */
+    --status-success: 142 71% 45%;
+    --status-warning: 38 92% 50%;
+    --status-error: 0 84% 60%;
+    --status-info: 217 91% 60%;
+    --status-pending: 38 92% 50%;
+    --status-active: 173 80% 40%;
+
+    /* Borders and inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 243 75% 59%;
+
+    --radius: 0.75rem;
+
+    /* Chart colors */
+    --chart-1: 243 75% 59%;
+    --chart-2: 173 80% 40%;
+    --chart-3: 262 83% 58%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 84% 60%;
+
+    /* Sidebar - Dark mode sidebar */
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 243 75% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 50% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 224 50% 12%;
+    --sidebar-ring: 243 75% 59%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 224 50% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 224 50% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 243 75% 65%;
+    --primary-foreground: 224 71% 4%;
+
+    --secondary: 224 50% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 224 50% 12%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 262 83% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 224 50% 15%;
+    --input: 224 50% 15%;
+    --ring: 243 75% 65%;
+
+    --sidebar-background: 224 71% 3%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 243 75% 70%;
+    --sidebar-primary-foreground: 224 71% 3%;
+    --sidebar-accent: 224 50% 10%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 224 50% 10%;
+    --sidebar-ring: 243 75% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Status badge variants */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide;
+  }
+  
+  .status-badge-draft {
+    @apply bg-slate-100 text-slate-700;
+  }
+  
+  .status-badge-pending {
+    @apply bg-amber-100 text-amber-700;
+  }
+  
+  .status-badge-approved {
+    @apply bg-emerald-100 text-emerald-700;
+  }
+  
+  .status-badge-active {
+    @apply bg-blue-100 text-blue-700;
+  }
+  
+  .status-badge-rejected {
+    @apply bg-rose-100 text-rose-700;
+  }
+  
+  .status-badge-closed {
+    @apply bg-slate-100 text-slate-600;
+  }
+
+  /* Modern stat card with subtle gradient */
+  .stat-card {
+    @apply bg-card rounded-2xl border border-border/50 p-6 shadow-sm transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.95) 100%);
+  }
+  
+  .stat-card:hover {
+    @apply shadow-md border-border;
+    transform: translateY(-2px);
+  }
+
+  /* KPI Card with accent border */
+  .kpi-card {
+    @apply bg-card rounded-2xl border-l-4 border border-border/50 p-6 shadow-sm transition-all duration-300;
+  }
+  
+  .kpi-card:hover {
+    @apply shadow-lg;
+  }
+
+  /* Navigation item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all duration-200;
+  }
+  
+  .nav-item-active {
+    @apply bg-sidebar-accent text-sidebar-primary font-medium;
+  }
+
+  /* Progress ring */
+  .progress-ring {
+    @apply relative inline-flex items-center justify-center;
+  }
+  
+  .progress-ring svg {
+    transform: rotate(-90deg);
+  }
+}
+
+@layer utilities {
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary to-accent;
+  }
+  
+  .gradient-success {
+    background: linear-gradient(135deg, hsl(142 71% 45%) 0%, hsl(173 80% 40%) 100%);
+  }
+  
+  .gradient-warning {
+    background: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(24 95% 53%) 100%);
+  }
+  
+  .gradient-info {
+    background: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(243 75% 59%) 100%);
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Smooth animations */
+  .animate-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+}
+
+/* Print to PDF (browser print) - clean enterprise layout */
+@media print {
+  /* Keep colors for charts/badges */
+  html, body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: #ffffff !important;
+  }
+
+  /* Ensure content flows naturally */
+  body {
+    overflow: visible !important;
+  }
+
+  /* Avoid awkward cuts */
+  .card, .stat-card, .kpi-card, table {
+    page-break-inside: avoid;
+  }
+
+  /* Links should not print as blue underlines */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Recharts containers should print at full width */
+  .recharts-responsive-container {
+    width: 100% !important;
+  }
+
+  /* Footer watermark (who exported + timestamp) */
+  body::after {
+    content: attr(data-print-watermark);
+    position: fixed;
+    bottom: 8mm;
+    left: 10mm;
+    right: 10mm;
+    font-size: 10px;
+    opacity: 0.55;
+    text-align: center;
+    direction: ltr;
+  }
+
+}
+
+html[dir="rtl"] body { font-family: Cairo, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+.ltr { direction:ltr; unicode-bidi:plaintext; }

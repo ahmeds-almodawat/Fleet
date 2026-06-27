@@ -1,0 +1,10 @@
+project_id = "wnatunqxpcnidmpieedi"
+
+[functions.maintenance-reminders]
+verify_jwt = false
+
+[functions.ocr-odometer]
+verify_jwt = false
+
+[functions.admin-create-user]
+verify_jwt = false
