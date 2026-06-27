@@ -1,0 +1,10 @@
+Delete these files from the repository and purge them from git history if the repo was pushed/shared:
+
+.env
+supabase/functions/.env
+supabase/.temp/
+backup_data.sql
+backup_schema.sql
+Fleet7.zip
+
+After deletion, rotate all exposed keys in Supabase and OCR.Space. Do not reuse old keys.

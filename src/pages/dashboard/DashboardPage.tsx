@@ -338,7 +338,7 @@ export default function DashboardPage() {
 
       const { data: trips } = await tripsQuery;
       if (trips) {
-        setRecentTrips(trips as RecentTrip[]);
+        setRecentTrips(trips as unknown as RecentTrip[]);
       }
 
       setLoading(false);

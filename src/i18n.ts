@@ -87,7 +87,6 @@ const resources = {
       'common.error': 'Something went wrong',
       'common.hours': 'hrs',
       'common.noAccess': 'You do not have access to view this page.',
-
       'layout.toggleSidebar': 'Toggle sidebar',
       'layout.brandTitle': 'Fleet Control',
       'layout.brandSubtitle': 'Vehicle Management',
@@ -95,8 +94,6 @@ const resources = {
       'layout.section.trips': 'Trips',
       'layout.section.fleet': 'Fleet',
       'layout.section.analytics': 'Analytics',
-      'layout.section.admin': 'Administration',
-      // Reports
       'reports.exportPdf': 'Export PDF',
       'reports.generatedOn': 'Generated on',
       'reports.window': 'Window',
@@ -113,8 +110,6 @@ const resources = {
       'reports.expired': 'Expired',
       'reports.expiring': 'Expiring',
       'reports.valid': 'Valid',
-
-      // Audit
       'audit.title': 'Audit Logs',
       'jobs.title': 'System Jobs',
       'jobs.subtitle': 'Background tasks, schedules, and history',
@@ -147,8 +142,6 @@ const resources = {
       'audit.actorPlaceholder': 'Search by user name…',
       'audit.dateFrom': 'From',
       'audit.dateTo': 'To',
-
-      // Backups
       'backup.title': 'Backups',
       'backup.subtitle': 'Export a system backup (Admin)',
       'backup.noticeTitle': 'Important',
@@ -164,8 +157,6 @@ const resources = {
       'audit.entity': 'Entity',
       'audit.summary': 'Summary',
       'audit.noEvents': 'No audit events found',
-
-      // Timeline
       'timeline.thisWeek': 'This week',
       'timeline.time': 'Time',
       'timeline.trip': 'Trip',
@@ -181,168 +172,23 @@ const resources = {
       'timeline.note': 'Tip: Add maintenance times if you need accurate scheduling blocks.',
       'timeline.noEvents': 'No events in this week',
       'layout.section.admin': 'Administration',
-
-      // Statuses
-      'status.Draft': 'Draft',
-      'status.PendingApproval': 'Pending Approval',
-      'status.Approved': 'Approved',
-      'status.Active': 'Active',
-      'status.Rejected': 'Rejected',
-      'status.Closed': 'Closed',
-      'status.Reviewed': 'Reviewed',
-      'status.Cancelled': 'Cancelled',
-      'status.Reopened': 'Reopened',
-      'status.Maintenance': 'Maintenance',
-      'status.OutOfService': 'Out of Service',
-
-      // Auth
       'auth.brandTitle': 'Fleet Control',
       'auth.brandSubtitle': 'Hospital Vehicle Operations',
-      'auth.login.title': 'Sign in',
-      'auth.login.desc': 'Enter your credentials to access the platform',
-      'auth.login.email': 'Email',
-      'auth.login.password': 'Password',
-      'auth.login.emailPlaceholder': 'you@hospital.sa',
       'auth.login.passwordPlaceholder': '••••••••',
-      'auth.login.noAccount': "Don't have an account?",
-      'auth.login.goRegister': 'Create account',
-      'auth.login.submit': 'Sign In',
       'auth.login.successTitle': 'Welcome back!',
       'auth.login.failedTitle': 'Sign in failed',
       'auth.login.failedDesc': 'Unable to sign in. Please try again.',
-      'auth.register.title': 'Create account',
-      'auth.register.desc': 'Register to access the fleet management platform',
-      'auth.register.staffId': 'Staff ID',
-      'auth.register.jobTitle': 'Job Title',
       'auth.register.jobTitlePlaceholder': 'e.g., Driver',
-      'auth.register.nameEn': 'Name (English)',
-      'auth.register.nameAr': 'Name (Arabic)',
-      'auth.register.phone': 'Phone',
       'auth.register.phonePlaceholder': '+966 5XXXXXXXX',
-      'auth.register.department': 'Department',
-      'auth.register.selectDepartment': 'Select department',
-      'auth.register.password': 'Password',
-      'auth.register.submit': 'Create account',
       'auth.register.failedTitle': 'Registration failed',
       'auth.register.failedDesc': 'Unable to create account. Please try again.',
       'auth.register.successTitle': 'Account created successfully',
       'auth.register.successDesc': 'Please contact an administrator to assign your role.',
-      'auth.register.haveAccount': 'Already have an account?',
-
-      // Header
-      'header.riyadhTimeLabel': 'Riyadh time:',
       'header.notifications': 'Notifications',
-      'header.riyadhTimeTitle': 'Current time in Riyadh (Asia/Riyadh)',
-
-      // Dashboard (missing)
-      'dashboard.welcomeBack': 'Welcome back, {{name}}',
-      'dashboard.overviewToday': 'Overview of fleet operations today',
-      'dashboard.fleetUtilization': 'Fleet utilization',
-      'dashboard.activeOfTotal': '{{active}} of {{total}} active',
-      'dashboard.activeTrips': 'Active trips',
-      'dashboard.currentlyOnRoad': 'Currently on road',
-      'dashboard.pendingApprovals': 'Pending approvals',
-      'dashboard.awaitingReview': 'Awaiting review',
-      'dashboard.anomalies': 'Anomalies',
-      'dashboard.flaggedTrips': 'Flagged trips',
-      'dashboard.distanceThisMonth': 'Distance this month',
-      'dashboard.tripsCompleted': '{{count}} trips completed',
-      'dashboard.vsLastMonth': 'vs last month',
-      'dashboard.tripsToday': 'Trips today',
-      'dashboard.completedToday': 'Completed today',
-      'dashboard.monthlyTrips': 'Monthly trips',
-      'dashboard.thisMonth': 'This month',
-      'dashboard.lastMonthDistance': 'Last month distance',
-      'dashboard.tripsCount': '{{count}} trips',
-      'dashboard.serviceDueSoon': 'Service due soon',
-      'dashboard.vehiclesWithinServiceWindow': 'Vehicles within service window',
-      'dashboard.insuranceExpiring': 'Insurance expiring',
-      'dashboard.registrationExpiring': 'Registration expiring',
-      'dashboard.within30Days': 'Within 30 days',
-
-      // Navigation
-      'nav.studio': 'Studio',
-      'nav.jobs': 'System Jobs',
-      // Vehicles
-      'vehicles.title': 'Vehicles',
-      'vehicles.desc': 'Manage fleet vehicles',
-      'vehicles.add': 'Add Vehicle',
-      'vehicles.edit': 'Edit Vehicle',
-      'vehicles.searchPlaceholder': 'Search by code, plate, or type…',
-      'vehicles.insuranceSection': 'Insurance',
-      'vehicles.insurancePolicyNo': 'Policy number',
-      'vehicles.insuranceStart': 'Start date',
-      'vehicles.insuranceEnd': 'End date',
-      'vehicles.insuranceDoc': 'Insurance copy (optional)',
-      'vehicles.registrationSection': 'Registration (Istimara)',
-      'vehicles.registrationNo': 'Registration number',
-      'vehicles.registrationStart': 'Start date',
-      'vehicles.registrationEnd': 'End date',
-      'vehicles.registrationDoc': 'Registration copy (optional)',
-      'vehicles.upload': 'Upload',
-      'vehicles.viewDoc': 'View',
-      'vehicles.autoApprove': 'Auto-Approve',
-      'vehicles.type': 'Type',
-      'vehicles.odometer': 'Odometer',
-      'vehicles.compliance.ok': 'Compliant',
-      'vehicles.compliance.expiring': 'Expiring soon',
-      'vehicles.compliance.expired': 'Expired',
-      'vehicles.compliance.missing': 'Missing',
-      'vehicles.compliance.reason.insurance_missing': 'Insurance end date not set',
-      'vehicles.compliance.reason.insurance_expired': 'Insurance expired',
-      'vehicles.compliance.reason.insurance_expiring': 'Insurance expiring soon',
-      'vehicles.compliance.reason.registration_missing': 'Registration end date not set',
-      'vehicles.compliance.reason.registration_expired': 'Registration expired',
-      'vehicles.compliance.reason.registration_expiring': 'Registration expiring soon',
-
-
-      // Studio
-      'studio.title': 'Identity Studio',
-      'studio.description': 'Branding and login screen customization with live preview',
-      'studio.tab.login': 'Login branding',
-      'studio.loginBranding': 'Login screen branding',
-      'studio.livePreview': 'Live preview',
-      'studio.brandTitleEn': 'Organization name (English)',
-      'studio.brandTitleAr': 'Organization name (Arabic)',
-      'studio.brandSubtitleEn': 'Subtitle (English)',
-      'studio.brandSubtitleAr': 'Subtitle (Arabic)',
-      'studio.logoUpload': 'Logo image',
-      'studio.logoSize': 'Logo size',
-      'studio.logoOpacity': 'Logo opacity',
-      'studio.fontColor': 'Heading color',
-      'studio.backgroundStyle': 'Background style',
-      'studio.backgroundImage': 'Background image',
-      'studio.optional': 'Optional',
-      'studio.remove': 'Remove',
-      'studio.viewImage': 'View image',
-      'studio.choose': 'Choose',
-      'studio.bg.default': 'Default',
-      'studio.bg.soft': 'Soft',
-      'studio.bg.dark': 'Dark',
-      'studio.save': 'Save changes',
-      'studio.saving': 'Saving…',
-      'studio.saved': 'Branding saved',
-      'studio.saveFailed': 'Failed to save branding',
-      'studio.reset': 'Reset',
-      'studio.resetDone': 'Reset to defaults',
-      'studio.uploaded': 'Uploaded',
-      'studio.uploadFailed': 'Upload failed',
-      'studio.bucketHint': 'Tip: create a public “branding” storage bucket in Supabase for logo/background.',
-      'studio.previewTitle': 'Preview',
-      'studio.previewHint': 'Updates instantly',
-      'studio.notePublic': 'Note: Images are stored in public storage to be visible on the login screen.',
-      'studio.noAccessTitle': 'Access denied',
-      'studio.noAccessDesc': 'You do not have permission to manage branding.',
-      'studio.pixels': '{{n}} px',
-      'studio.percent': '{{n}}%',
       'auth.register.signIn': 'Sign in',
-
-      // Pages
       'page.notFound.title': 'Page not found',
       'page.notFound.desc': 'The page you are looking for does not exist.',
       'page.notFound.goHome': 'Return to Home',
-
-      // Trips
       'trips.pageTitle': 'Trips',
       'trips.pageDescAll': 'All fleet trips',
       'trips.pageDescMine': 'Your trip history',
@@ -352,8 +198,6 @@ const resources = {
       'trips.emptyTitle': 'No trips found',
       'trips.emptyDescFiltered': 'Try adjusting your filters.',
       'trips.emptyDescNew': 'Create your first trip to get started.',
-      'trips.anomaly': 'Note',
-      'trips.km': 'km',
       'trips.table.number': 'Trip #',
       'trips.table.vehicle': 'Vehicle',
       'trips.table.route': 'Route',
@@ -362,11 +206,6 @@ const resources = {
       'trips.emptyStart': 'Create your first trip to get started.',
       'trips.anomaly': 'Anomaly',
       'trips.km': 'km',
-
-      // Reports
-      'reports.overview': 'Overview',
-      'reports.maintenanceCosts': 'Maintenance costs',
-
       'bootstrap.banner': 'No permissions found for your account. If this is a new installation, click below once to become the first System Administrator.',
       'bootstrap.enableTitle': 'Super Admin enabled',
       'bootstrap.enableDesc': 'You are now System Administrator. Reloading permissions…',
@@ -376,7 +215,6 @@ const resources = {
       'bootstrap.failedDesc': 'Unknown error',
       'bootstrap.button': 'Make me Super Admin',
       'bootstrap.buttonBusy': 'Enabling…',
-
       'nav.dashboard': 'Dashboard',
       'nav.vehicles': 'Vehicles',
       'nav.trips': 'Trips',
@@ -385,7 +223,6 @@ const resources = {
       'nav.vehicleTypes': 'Vehicle Types',
       'nav.destinations': 'Destinations',
       'nav.departments': 'Departments',
-      'nav.roles': 'Roles',
       'nav.settings': 'Settings',
       'nav.reports': 'Reports',
       'nav.notifications': 'Notifications',
@@ -397,8 +234,6 @@ const resources = {
       'notifications.unread': 'Unread',
       'notifications.markAllRead': 'Mark all as read',
       'notifications.title': 'Notifications',
-
-      // Approvals
       'approvals.title': 'Approvals',
       'approvals.description': 'Review and approve trip requests',
       'approvals.queueTitle': 'Approvals Queue',
@@ -413,24 +248,13 @@ const resources = {
       'approvals.approve': 'Approve',
       'approvals.reject': 'Reject',
       'approvals.view': 'View',
-
-      'dashboard.welcomeBack': 'Welcome back, {{name}}',
-      'dashboard.overviewToday': "Here's your fleet operations overview for today",
-      'dashboard.fleetUtilization': 'Fleet Utilization',
-      'dashboard.activeOfTotal': '{{active}} of {{total}} active',
-      'dashboard.activeTrips': 'Active Trips',
-      'dashboard.currentlyOnRoad': 'Currently on the road',
-      'dashboard.pendingApprovals': 'Pending Approvals',
       'dashboard.tripsNeedReview': 'Trips that need review',
-
       'roles.title': 'Roles & Permissions',
       'roles.description': 'Manage access control roles',
       'roles.createRole': 'Create Role',
       'roles.roleName': 'Role Name',
       'roles.roleNamePlaceholder': 'e.g., Fleet Supervisor',
       'roles.permissions': 'Permissions',
-
-      // Statuses
       'status.Draft': 'Draft',
       'status.PendingApproval': 'Pending Approval',
       'status.Approved': 'Approved',
@@ -442,8 +266,6 @@ const resources = {
       'status.Reopened': 'Reopened',
       'status.Maintenance': 'Maintenance',
       'status.OutOfService': 'Out of Service',
-
-      // Reports
       'reports.title': 'Reports',
       'reports.desc': 'Fleet analytics and insights',
       'reports.range.last7': 'Last 7 days',
@@ -464,8 +286,6 @@ const resources = {
       'reports.maintenanceCosts.desc': 'Spending by vehicle, type, and time',
       'reports.overview': 'Overview',
       'reports.maintenanceCosts': 'Maintenance Costs',
-
-      // Auth
       'auth.appTitle': 'Fleet Control',
       'auth.appSubtitle': 'Hospital Vehicle Operations',
       'auth.login.title': 'Sign In',
@@ -488,12 +308,8 @@ const resources = {
       'auth.register.password': 'Password',
       'auth.register.submit': 'Create account',
       'auth.register.haveAccount': 'Already have an account?',
-
-      // Header
       'header.riyadhTimeLabel': 'Riyadh time:',
       'header.riyadhTimeTitle': 'Current time in Riyadh (Asia/Riyadh)',
-
-      // Dashboard (missing)
       'dashboard.welcomeBack': 'Welcome back, {{name}}',
       'dashboard.overviewToday': 'Overview of fleet operations today',
       'dashboard.fleetUtilization': 'Fleet utilization',
@@ -518,11 +334,8 @@ const resources = {
       'dashboard.insuranceExpiring': 'Insurance expiring',
       'dashboard.registrationExpiring': 'Registration expiring',
       'dashboard.within30Days': 'Within 30 days',
-
-      // Navigation
       'nav.studio': 'Studio',
       'nav.jobs': 'System Jobs',
-      // Vehicles
       'vehicles.title': 'Vehicles',
       'vehicles.desc': 'Manage fleet vehicles',
       'vehicles.add': 'Add Vehicle',
@@ -553,9 +366,6 @@ const resources = {
       'vehicles.compliance.reason.registration_missing': 'Registration end date not set',
       'vehicles.compliance.reason.registration_expired': 'Registration expired',
       'vehicles.compliance.reason.registration_expiring': 'Registration expiring soon',
-
-
-      // Studio
       'studio.title': 'Identity Studio',
       'studio.description': 'Branding and login screen customization with live preview',
       'studio.tab.login': 'Login branding',
@@ -578,8 +388,6 @@ const resources = {
       'studio.system.resetDialogConfirm': 'Confirm reset',
       'studio.system.resetDone': 'Data has been reset',
       'studio.system.resetFailed': 'Reset failed',
-
-      // Studio: system feature flags
       'studio.systemTitle': 'System options',
       'studio.saveFeatures': 'Save options',
       'studio.featuresSaved': 'Options saved',
@@ -596,7 +404,6 @@ const resources = {
       'studio.features.resetDemo': 'Reset demo data',
       'studio.features.resetDemoHint': 'Show the “Reset demo data” action (Admin only).',
       'studio.features.resetDemoProdLocked': 'Locked in production for safety.',
-
       'studio.resetDemoTitle': 'Reset demo data',
       'studio.resetDemoDesc': 'This will delete demo/operational data from the database. Use in testing environments only.',
       'studio.resetDemoProdLocked': 'Note: this action is disabled in production.',
@@ -606,7 +413,6 @@ const resources = {
       'studio.resetDemoType': 'Type RESET',
       'studio.resetDemoConfirmButton': 'Confirm reset',
       'studio.resetFailed': 'Reset failed',
-
       'studio.opsNotesTitle': 'Operational notes',
       'studio.opsNotes1': 'For production, keep “Reset demo data” disabled.',
       'studio.opsNotes2': 'You can enable backups later from here without code changes.',
@@ -651,17 +457,11 @@ const resources = {
       'studio.noAccessDesc': 'You do not have permission to manage branding.',
       'studio.pixels': '{{n}} px',
       'studio.percent': '{{n}}%',
-
-      // Logo background (behind logo) controls
       'studio.loginLogoBgColor': 'Login logo background color',
       'studio.loginLogoBgOpacity': 'Login logo background opacity',
       'studio.sidebarLogoBgColor': 'Sidebar logo background color',
       'studio.sidebarLogoBgOpacity': 'Sidebar logo background opacity',
-
-      // Print / PDF
       'reports.export.pdf': 'Export PDF',
-
-      // Maintenance cost report
       'maintenanceCost.filters.vehicle': 'Vehicle',
       'maintenanceCost.filters.allVehicles': 'All vehicles',
       'maintenanceCost.filters.startDate': 'Start date',
@@ -681,7 +481,6 @@ const resources = {
       'maintenanceCost.table.vehicle': 'Vehicle',
       'maintenanceCost.table.type': 'Service type',
       'maintenanceCost.table.cost': 'Cost',
-      // Trips: New Trip
       'trips.new.pageTitle': 'New Trip',
       'trips.new.pageDesc': 'Create a new trip request',
       'trips.new.compliance.title': 'Compliance',
@@ -771,8 +570,6 @@ const resources = {
       'trips.new.toast.submittedApproval': 'Trip submitted for approval',
       'trips.new.toast.createdApproved': 'Trip created and auto-approved!',
       'trips.new.toast.createdApprovedDesc': 'You can now start your journey.',
-
-      // Maintenance
       'maintenance.pageTitle': 'Vehicle Maintenance',
       'maintenance.pageDesc': 'Schedule and track vehicle maintenance',
       'maintenance.kpi.totalSpent': 'Total Spent',
@@ -829,7 +626,6 @@ const resources = {
       'maintenance.toast.completed': 'Maintenance marked as complete',
       'maintenance.toast.cancelFailed': 'Failed to cancel maintenance',
       'maintenance.toast.cancelled': 'Maintenance cancelled',
-      'maintenance.status.completed': 'Completed',
       'settings.title': 'Settings',
       'settings.description': 'Configure system settings',
       'settings.systemSettings': 'System Settings',
@@ -864,8 +660,6 @@ const resources = {
       'settings.remindersRan': 'Reminders generated',
       'settings.remindersInserted': 'Inserted {{count}} notification(s).',
       'settings.remindersFailed': 'Failed to generate reminders',
-
-      // Vehicle Types & Destinations (bilingual)
       'vehicleTypes.title': 'Vehicle Types',
       'vehicleTypes.description': 'Manage vehicle types and default thresholds.',
       'vehicleTypes.listTitle': 'Vehicle Types',
@@ -876,7 +670,6 @@ const resources = {
       'vehicleTypes.inactive': 'Inactive',
       'vehicleTypes.empty': 'No vehicle types found',
       'vehicleTypes.rowMeta': 'Anomaly {{a}} km • Service {{s}} km (notify {{n}} km)',
-
       'vehicleTypes.fields.nameEn': 'Name (English)',
       'vehicleTypes.fields.nameAr': 'Name (Arabic)',
       'vehicleTypes.fields.anomalyThreshold': 'Anomaly threshold (km)',
@@ -884,38 +677,31 @@ const resources = {
       'vehicleTypes.fields.serviceNotifyBefore': 'Notify before service (km)',
       'vehicleTypes.fields.active': 'Active',
       'vehicleTypes.fields.activeHint': 'Inactive types are hidden from selection.',
-
       'vehicleTypes.placeholders.nameEn': 'e.g., Sedan',
       'vehicleTypes.placeholders.nameAr': 'e.g., سيدان',
-
       'vehicleTypes.toast.loadFailed': 'Failed to load vehicle types',
       'vehicleTypes.toast.saved': 'Saved',
       'vehicleTypes.toast.saveFailed': 'Failed to save vehicle type',
       'vehicleTypes.toast.deleted': 'Deleted',
       'vehicleTypes.toast.deleteFailed': 'Failed to delete vehicle type',
-
       'vehicleTypes.filter': 'Filter',
       'vehicleTypes.toast.created': 'Vehicle type created',
       'vehicleTypes.toast.updated': 'Vehicle type updated',
       'vehicleTypes.toast.nameRequired': 'Name is required',
-
       'destinations.filter': 'Filter',
       'destinations.inactive': 'Inactive',
       'destinations.noCategory': 'No category',
       'destinations.fields.categoryEn': 'Category (English)',
       'destinations.fields.categoryAr': 'Category (Arabic)',
       'destinations.fields.categoryLabel': 'Category',
-
       'destinations.placeholders.categoryEn': 'e.g., Transport',
       'destinations.placeholders.categoryAr': 'مثال: نقل',
-
       'destinations.toast.created': 'Destination created',
       'destinations.toast.updated': 'Destination updated',
       'destinations.toast.nameRequired': 'Name is required',
       'destinations.toast.confirmDeleteTitle': 'Delete destination?',
       'destinations.toast.confirmDeleteBody': 'This will remove it from selection lists. This action cannot be undone.',
       'destinations.toast.confirmDeleteAction': 'Delete',
-
       'destinations.title': 'Destinations',
       'destinations.description': 'Manage trip destinations.',
       'destinations.listTitle': 'Destinations',
@@ -924,23 +710,19 @@ const resources = {
       'destinations.addTitle': 'Add Destination',
       'destinations.editTitle': 'Edit Destination',
       'destinations.empty': 'No destinations found',
-
       'destinations.fields.nameEn': 'Name (English)',
       'destinations.fields.nameAr': 'Name (Arabic)',
       'destinations.fields.category': 'Category',
       'destinations.fields.active': 'Active',
       'destinations.fields.activeHint': 'Inactive destinations are hidden from selection.',
-
       'destinations.placeholders.nameEn': 'e.g., Airport',
       'destinations.placeholders.nameAr': 'e.g., المطار',
       'destinations.placeholders.category': 'e.g., Transport',
-
       'destinations.toast.loadFailed': 'Failed to load destinations',
       'destinations.toast.saved': 'Saved',
       'destinations.toast.saveFailed': 'Failed to save destination',
       'destinations.toast.deleted': 'Deleted',
       'destinations.toast.deleteFailed': 'Failed to delete destination',
-
       'notifications.description': 'All alerts and updates',
       'notifications.none': 'No notifications',
       'notifications.new': 'New',
@@ -948,31 +730,25 @@ const resources = {
       'notifications.toast.marked_n': '{{n}} marked as read',
       'notifications.toast.mark_failed': 'Failed to mark notifications as read',
       'notifications.toast.load_failed': 'Failed to load notifications',
-
       'notifications.severity.INFO': 'Info',
       'notifications.severity.WARN': 'Warning',
       'notifications.severity.BLOCKER': 'Critical',
-
       'maintenance.status.completed': 'Completed',
       'maintenance.status.cancelled': 'Cancelled',
       'maintenance.status.inProgress': 'In Progress',
       'maintenance.status.overdue': 'Overdue',
       'maintenance.status.dueSoon': 'Due Soon',
       'maintenance.status.scheduled': 'Scheduled',
-
       'maintenance.types.oilChange': 'Oil Change',
       'maintenance.types.tireRotation': 'Tire Rotation',
       'maintenance.types.brakeService': 'Brake Service',
       'maintenance.types.engineService': 'Engine Service',
       'maintenance.types.inspection': 'Inspection',
       'maintenance.types.other': 'Other',
-
-      // Studio: favicon
       'studio.faviconUpload': 'Upload favicon',
       'studio.faviconUrl': 'Favicon URL',
       'studio.faviconRemove': 'Remove favicon',
       'studio.faviconHint': 'Recommended: 32×32 or 48×48 .ico or .png',
-
     },
   },
   ar: {
@@ -1052,8 +828,6 @@ const resources = {
       'common.error': 'حدث خطأ غير متوقع',
       'common.hours': 'ساعة',
       'common.noAccess': 'لا تملك صلاحية عرض هذه الصفحة.',
-
-      // التقارير
       'reports.exportPdf': 'تصدير PDF',
       'reports.generatedOn': 'تم الإنشاء في',
       'reports.window': 'النطاق',
@@ -1070,8 +844,6 @@ const resources = {
       'reports.expired': 'منتهي',
       'reports.expiring': 'قارب على الانتهاء',
       'reports.valid': 'ساري',
-
-      // سجل التدقيق
       'audit.title': 'سجل التدقيق',
       'jobs.title': 'المهام النظامية',
       'jobs.subtitle': 'مهام تشغيلية، جداول، وسجل التنفيذ',
@@ -1104,8 +876,6 @@ const resources = {
       'audit.actorPlaceholder': 'ابحث باسم المستخدم…',
       'audit.dateFrom': 'من',
       'audit.dateTo': 'إلى',
-
-      // النسخ الاحتياطي
       'backup.title': 'النسخ الاحتياطي',
       'backup.subtitle': 'تصدير نسخة احتياطية للنظام (للمسؤول)',
       'backup.noticeTitle': 'تنبيه مهم',
@@ -1121,8 +891,6 @@ const resources = {
       'audit.entity': 'الكيان',
       'audit.summary': 'الملخص',
       'audit.noEvents': 'لا توجد أحداث تدقيق',
-
-      // المخطط الزمني
       'timeline.thisWeek': 'هذا الأسبوع',
       'timeline.time': 'الوقت',
       'timeline.trip': 'رحلة',
@@ -1137,7 +905,6 @@ const resources = {
       'timeline.maintenanceShort': 'صيانة',
       'timeline.note': 'ملاحظة: لإظهار الفترات بدقة أعلى، يُنصح بإضافة أوقات الصيانة عند الجدولة.',
       'timeline.noEvents': 'لا توجد أحداث لهذا الأسبوع',
-
       'layout.toggleSidebar': 'فتح/إغلاق القائمة',
       'layout.brandTitle': 'منصة إدارة مركبات المستشفى',
       'layout.brandSubtitle': 'التشغيل والامتثال والمتابعة',
@@ -1146,8 +913,6 @@ const resources = {
       'layout.section.fleet': 'سجل المركبات',
       'layout.section.analytics': 'التقارير والمؤشرات',
       'layout.section.admin': 'إدارة النظام',
-      'layout.section.admin': 'إدارة النظام',
-
       'bootstrap.banner': 'لا توجد صلاحيات لحسابك. إذا كان هذا أول تشغيل للنظام، اضغط مرة واحدة لتصبح أول مسؤول نظام.',
       'bootstrap.enableTitle': 'تم تفعيل صلاحية المسؤول',
       'bootstrap.enableDesc': 'أصبحت الآن مسؤول النظام. جارٍ تحديث الصلاحيات…',
@@ -1157,71 +922,25 @@ const resources = {
       'bootstrap.failedDesc': 'خطأ غير معروف',
       'bootstrap.button': 'اجعلني مسؤول النظام',
       'bootstrap.buttonBusy': 'جارٍ التفعيل…',
-
       'nav.dashboard': 'لوحة المعلومات',
       'nav.vehicles': 'المركبات',
       'nav.trips': 'الرحلات',
       'nav.approvals': 'اعتماد الطلبات',
       'nav.maintenance': 'الصيانة',
-      'nav.vehicleTypes': 'تصنيفات المركبات',
-      'nav.destinations': 'الوجهات',
-      'nav.departments': 'الأقسام',
-      'nav.roles': 'الأدوار',
-      'nav.settings': 'إعدادات النظام',
-      'nav.reports': 'التقارير',
-      'nav.maintenance': 'الصيانة',
       'nav.vehicleTypes': 'أنواع المركبات',
       'nav.destinations': 'الوجهات',
       'nav.departments': 'الأقسام',
-      'nav.roles': 'الأدوار',
       'nav.settings': 'الإعدادات',
       'nav.reports': 'التقارير',
       'nav.notifications': 'الإشعارات',
       'nav.roles': 'الأدوار والصلاحيات',
       'nav.users': 'إدارة المستخدمين',
-      'nav.studio': 'استوديو الهوية',
-      'nav.jobs': 'المهام النظامية',
-      // المركبات
-      'vehicles.title': 'المركبات',
-      'vehicles.desc': 'إدارة مركبات الأسطول',
-      'vehicles.add': 'إضافة مركبة',
-      'vehicles.edit': 'تعديل مركبة',
-      'vehicles.searchPlaceholder': 'بحث بالكود أو اللوحة أو النوع…',
-      'vehicles.insuranceSection': 'التأمين',
-      'vehicles.insurancePolicyNo': 'رقم وثيقة التأمين',
-      'vehicles.insuranceStart': 'تاريخ بداية التأمين',
-      'vehicles.insuranceEnd': 'تاريخ نهاية التأمين',
-      'vehicles.insuranceDoc': 'نسخة وثيقة التأمين (اختياري)',
-      'vehicles.registrationSection': 'رخصة السير (استمارة المركبة)',
-      'vehicles.registrationNo': 'رقم رخصة السير',
-      'vehicles.registrationStart': 'تاريخ بداية الرخصة',
-      'vehicles.registrationEnd': 'تاريخ نهاية الرخصة',
-      'vehicles.registrationDoc': 'نسخة رخصة السير (اختياري)',
-      'vehicles.upload': 'رفع',
-      'vehicles.viewDoc': 'عرض',
-      'vehicles.autoApprove': 'اعتماد تلقائي',
-      'vehicles.type': 'التصنيف',
-      'vehicles.odometer': 'عداد المسافة',
-      'vehicles.compliance.ok': 'ساري',
-      'vehicles.compliance.expiring': 'قارب على الانتهاء',
-      'vehicles.compliance.expired': 'منتهي',
-      'vehicles.compliance.missing': 'غير مكتمل',
-      'vehicles.compliance.reason.insurance_missing': 'لم يتم تحديد تاريخ انتهاء التأمين',
-      'vehicles.compliance.reason.insurance_expired': 'وثيقة التأمين منتهية',
-      'vehicles.compliance.reason.insurance_expiring': 'وثيقة التأمين قاربت على الانتهاء',
-      'vehicles.compliance.reason.registration_missing': 'لم يتم تحديد تاريخ انتهاء الاستمارة',
-      'vehicles.compliance.reason.registration_expired': 'استمارة المركبة منتهية',
-      'vehicles.compliance.reason.registration_expiring': 'استمارة المركبة قاربت على الانتهاء',
-
       'trips.newTrip': 'رحلة جديدة',
-      'trips.allTrips': 'كل الرحلات',
       'trips.allTrips': 'كل الرحلات',
       'trips.requestForOthers': 'طلب بالنيابة',
       'notifications.unread': 'غير مقروء',
       'notifications.markAllRead': 'تحديد الكل كمقروء',
       'notifications.title': 'الإشعارات',
-
-      // Approvals
       'approvals.title': 'الموافقات',
       'approvals.description': 'مراجعة واعتماد طلبات الرحلات',
       'approvals.queueTitle': 'قائمة الموافقات',
@@ -1233,24 +952,13 @@ const resources = {
       'approvals.status.approved': 'تمت الموافقة',
       'approvals.status.rejected': 'مرفوض',
       'approvals.status.all': 'الكل',
-
-      'dashboard.welcomeBack': 'مرحباً، {{name}}',
-      'dashboard.overviewToday': 'هذه نظرة عامة على عمليات الأسطول اليوم',
-      'dashboard.fleetUtilization': 'نسبة تشغيل الأسطول',
-      'dashboard.activeOfTotal': '{{active}} من {{total}} نشطة',
-      'dashboard.activeTrips': 'الرحلات النشطة',
-      'dashboard.currentlyOnRoad': 'على الطريق حالياً',
-      'dashboard.pendingApprovals': 'موافقات معلّقة',
       'dashboard.tripsNeedReview': 'رحلات تحتاج مراجعة',
-
       'roles.title': 'الأدوار والصلاحيات',
       'roles.description': 'إدارة أدوار التحكم في الصلاحيات',
       'roles.createRole': 'إنشاء دور',
       'roles.roleName': 'اسم الدور',
       'roles.roleNamePlaceholder': 'مثال: مشرف الأسطول',
       'roles.permissions': 'الصلاحيات',
-
-      // Statuses
       'status.Draft': 'مسودة',
       'status.PendingApproval': 'بانتظار الموافقة',
       'status.Approved': 'معتمد',
@@ -1262,8 +970,6 @@ const resources = {
       'status.Reopened': 'أُعيد فتحه',
       'status.Maintenance': 'صيانة',
       'status.OutOfService': 'خارج الخدمة',
-
-      // Reports
       'reports.title': 'التقارير',
       'reports.desc': 'مؤشرات وتحليلات تشغيل الأسطول',
       'reports.range.last7': 'آخر 7 أيام',
@@ -1284,8 +990,6 @@ const resources = {
       'reports.maintenanceCosts.desc': 'الإنفاق حسب المركبة والنوع والفترة الزمنية',
       'reports.overview': 'نظرة عامة',
       'reports.maintenanceCosts': 'تكاليف الصيانة',
-
-      // Auth (governmental / hospital tone)
       'auth.brandTitle': 'منصة إدارة مركبات المستشفى',
       'auth.brandSubtitle': 'منظومة تشغيل الأسطول والامتثال',
       'auth.login.title': 'تسجيل الدخول',
@@ -1318,8 +1022,6 @@ const resources = {
       'auth.register.successDesc': 'يرجى التواصل مع مسؤول النظام لتعيين الدور والصلاحيات.',
       'auth.register.haveAccount': 'لديك حساب بالفعل؟',
       'auth.register.signIn': 'تسجيل الدخول',
-
-      // Trips
       'trips.pageTitle': 'الرحلات',
       'trips.pageDescAll': 'جميع رحلات الأسطول',
       'trips.pageDescMine': 'سجل رحلاتي',
@@ -1336,13 +1038,8 @@ const resources = {
       'trips.table.route': 'المسار',
       'trips.table.period': 'الفترة',
       'trips.table.distance': 'المسافة',
-
-
-      // Header
       'header.riyadhTimeLabel': 'وقت الرياض:',
       'header.riyadhTimeTitle': 'الوقت الحالي في مدينة الرياض',
-
-      // Dashboard
       'dashboard.welcomeBack': 'مرحباً، {{name}}',
       'dashboard.overviewToday': 'نظرة عامة على عمليات الأسطول لهذا اليوم',
       'dashboard.fleetUtilization': 'نسبة تشغيل الأسطول',
@@ -1367,11 +1064,8 @@ const resources = {
       'dashboard.insuranceExpiring': 'تأمينات على وشك الانتهاء',
       'dashboard.registrationExpiring': 'رخص السير على وشك الانتهاء',
       'dashboard.within30Days': 'خلال 30 يوماً',
-
-      // Navigation
       'nav.studio': 'استوديو الهوية',
       'nav.jobs': 'المهام النظامية',
-      // المركبات
       'vehicles.title': 'المركبات',
       'vehicles.desc': 'إدارة مركبات الأسطول',
       'vehicles.add': 'إضافة مركبة',
@@ -1402,9 +1096,6 @@ const resources = {
       'vehicles.compliance.reason.registration_missing': 'لم يتم تحديد تاريخ انتهاء الاستمارة',
       'vehicles.compliance.reason.registration_expired': 'استمارة المركبة منتهية',
       'vehicles.compliance.reason.registration_expiring': 'استمارة المركبة قاربت على الانتهاء',
-
-
-      // Studio
       'studio.title': 'استوديو الهوية البصرية',
       'studio.description': 'إدارة هوية المنصة وتخصيص شاشة الدخول مع معاينة مباشرة',
       'studio.tab.login': 'تخصيص شاشة الدخول',
@@ -1415,7 +1106,6 @@ const resources = {
       'studio.brandSubtitleEn': 'الوصف المختصر (بالإنجليزية)',
       'studio.brandSubtitleAr': 'الوصف المختصر (بالعربية)',
       'studio.tab.sidebar': 'تخصيص الشريط الجانبي',
-      'studio.tab.system': 'النظام',
       'studio.systemTitle': 'خيارات النظام',
       'studio.saveFeatures': 'حفظ الخيارات',
       'studio.featuresSaved': 'تم حفظ الخيارات',
@@ -1497,17 +1187,11 @@ const resources = {
       'studio.noAccessDesc': 'لا تملك صلاحية إدارة هوية المنصة.',
       'studio.pixels': '{{n}} بكسل',
       'studio.percent': '{{n}}٪',
-
-      // Logo background (behind logo) controls
       'studio.loginLogoBgColor': 'لون خلفية شعار الدخول',
       'studio.loginLogoBgOpacity': 'شفافية خلفية شعار الدخول',
       'studio.sidebarLogoBgColor': 'لون خلفية شعار الشريط الجانبي',
       'studio.sidebarLogoBgOpacity': 'شفافية خلفية شعار الشريط الجانبي',
-
-      // Print / PDF
       'reports.export.pdf': 'تصدير بصيغة PDF',
-
-      // Maintenance cost report
       'maintenanceCost.filters.vehicle': 'المركبة',
       'maintenanceCost.filters.allVehicles': 'جميع المركبات',
       'maintenanceCost.filters.startDate': 'تاريخ البداية',
@@ -1527,12 +1211,9 @@ const resources = {
       'maintenanceCost.table.vehicle': 'المركبة',
       'maintenanceCost.table.type': 'نوع الخدمة',
       'maintenanceCost.table.cost': 'التكلفة',
-
-      // Not found
       'page.notFound.title': 'الصفحة غير موجودة',
       'page.notFound.desc': 'عذراً، لا يمكن العثور على الصفحة المطلوبة.',
       'page.notFound.goHome': 'العودة للرئيسية',
-      // Trips: New Trip
       'trips.new.pageTitle': 'طلب رحلة جديدة',
       'trips.new.pageDesc': 'إنشاء طلب رحلة للمراجعة والاعتماد',
       'trips.new.card.vehicle': 'تحديد المركبة',
@@ -1613,8 +1294,6 @@ const resources = {
       'trips.new.toast.submittedApproval': 'تم إرسال الطلب للاعتماد',
       'trips.new.toast.createdApproved': 'تم إنشاء الرحلة واعتمادها تلقائيًا',
       'trips.new.toast.createdApprovedDesc': 'يمكنك الآن بدء الرحلة.',
-
-      // Maintenance
       'maintenance.pageTitle': 'إدارة الصيانة',
       'maintenance.pageDesc': 'جدولة وتتبع أعمال صيانة المركبات',
       'maintenance.kpi.totalSpent': 'إجمالي الصرف',
@@ -1677,145 +1356,17 @@ const resources = {
       'maintenance.status.overdue': 'متأخرة',
       'maintenance.status.dueSoon': 'مستحقة قريبًا',
       'maintenance.status.scheduled': 'مجدولة',
-
       'maintenance.types.oilChange': 'تغيير زيت',
       'maintenance.types.tireRotation': 'تبديل الإطارات',
       'maintenance.types.brakeService': 'خدمة الفرامل',
       'maintenance.types.engineService': 'صيانة المحرك',
       'maintenance.types.inspection': 'فحص',
       'maintenance.types.other': 'أخرى',
-
-      // Studio: favicon
       'studio.faviconUpload': 'رفع أيقونة المتصفح',
       'studio.faviconUrl': 'رابط الأيقونة',
       'studio.faviconRemove': 'إزالة الأيقونة',
       'studio.faviconHint': 'يفضل: ‎32×32 أو ‎48×48 بصيغة ‎.ico أو ‎.png',
-
     },
-
-      'settings.title': 'الإعدادات',
-      'settings.description': 'تهيئة إعدادات النظام',
-      'settings.systemSettings': 'إعدادات النظام',
-      'settings.departments': 'الأقسام',
-      'settings.newDeptPlaceholder': 'اسم القسم الجديد',
-      'settings.remove': 'إزالة',
-      'settings.noDepartments': 'لا توجد أقسام',
-      'settings.saved': 'تم حفظ الإعدادات',
-      'settings.save': 'حفظ الإعدادات',
-      'settings.saving': 'جاري الحفظ…',
-      'settings.loadFailed': 'تعذر تحميل الإعدادات',
-      'settings.saveFailed': 'تعذر حفظ الإعدادات',
-      'settings.deptAdded': 'تمت إضافة القسم',
-      'settings.deptAddFailed': 'تعذرت إضافة القسم',
-      'settings.deptDeleted': 'تم حذف القسم',
-      'settings.deptDeleteFailed': 'تعذر حذف القسم',
-      'settings.deptInUse': 'قد يكون القسم مستخدماً',
-      'settings.notifications': 'الإشعارات',
-      'settings.browserNotifications': 'إشعارات المتصفح',
-      'settings.browserNotificationsDesc': 'عرض تنبيهات النظام كإشعارات على الجهاز (اختياري).',
-      'settings.permission': 'الصلاحية',
-      'settings.notificationsEnabled': 'تم تفعيل إشعارات المتصفح',
-      'settings.notificationsDisabled': 'تم إيقاف إشعارات المتصفح',
-      'settings.notificationsNotSupported': 'إشعارات المتصفح غير مدعومة على هذا المتصفح',
-      'settings.notificationsPermissionDenied': 'لم يتم منح الصلاحية',
-      'settings.notificationsEnableFailed': 'تعذر تفعيل الإشعارات',
-      'settings.notificationsTestTitle': 'إدارة الأسطول',
-      'settings.notificationsTestBody': 'تم تفعيل الإشعارات على هذا الجهاز.',
-      'settings.reminders': 'التذكيرات',
-      'settings.remindersDesc': 'إنشاء تذكيرات بمواعيد الانتهاء (التأمين/الاستمارة) على شكل إشعارات.',
-      'settings.runNow': 'تشغيل الآن',
-      'settings.remindersRan': 'تم إنشاء التذكيرات',
-      'settings.remindersInserted': 'تمت إضافة {{count}} إشعار/إشعارات.',
-      'settings.remindersFailed': 'تعذر إنشاء التذكيرات',
-
-      // أنواع المركبات والوجهات (ثنائي اللغة)
-      'vehicleTypes.title': 'أنواع المركبات',
-      'vehicleTypes.description': 'إدارة أنواع المركبات والحدود الافتراضية.',
-      'vehicleTypes.listTitle': 'قائمة أنواع المركبات',
-      'vehicleTypes.searchPlaceholder': 'ابحث بالاسم…',
-      'vehicleTypes.add': 'إضافة نوع',
-      'vehicleTypes.addTitle': 'إضافة نوع مركبة',
-      'vehicleTypes.editTitle': 'تعديل نوع المركبة',
-      'vehicleTypes.inactive': 'غير نشط',
-      'vehicleTypes.empty': 'لا توجد أنواع مركبات',
-      'vehicleTypes.rowMeta': 'شذوذ {{a}} كم • صيانة كل {{s}} كم (تنبيه قبل {{n}} كم)',
-
-      'vehicleTypes.fields.nameEn': 'الاسم (إنجليزي)',
-      'vehicleTypes.fields.nameAr': 'الاسم (عربي)',
-      'vehicleTypes.fields.anomalyThreshold': 'حد الشذوذ (كم)',
-      'vehicleTypes.fields.serviceInterval': 'فاصل الصيانة (كم)',
-      'vehicleTypes.fields.serviceNotifyBefore': 'التنبيه قبل الصيانة (كم)',
-      'vehicleTypes.fields.active': 'نشط',
-      'vehicleTypes.fields.activeHint': 'الأنواع غير النشطة لا تظهر ضمن خيارات الاختيار.',
-
-      'vehicleTypes.placeholders.nameEn': 'مثال: Sedan',
-      'vehicleTypes.placeholders.nameAr': 'مثال: سيدان',
-
-      'vehicleTypes.toast.loadFailed': 'تعذر تحميل أنواع المركبات',
-      'vehicleTypes.toast.saved': 'تم الحفظ',
-      'vehicleTypes.toast.saveFailed': 'تعذر حفظ نوع المركبة',
-      'vehicleTypes.toast.deleted': 'تم الحذف',
-      'vehicleTypes.toast.deleteFailed': 'تعذر حذف نوع المركبة',
-
-      'vehicleTypes.filter': 'تصفية',
-      'vehicleTypes.toast.created': 'تم إنشاء نوع المركبة',
-      'vehicleTypes.toast.updated': 'تم تحديث نوع المركبة',
-      'vehicleTypes.toast.nameRequired': 'الاسم مطلوب',
-
-      'destinations.filter': 'تصفية',
-      'destinations.inactive': 'غير نشط',
-      'destinations.noCategory': 'بدون تصنيف',
-      'destinations.fields.categoryEn': 'التصنيف (إنجليزي)',
-      'destinations.fields.categoryAr': 'التصنيف (عربي)',
-      'destinations.fields.categoryLabel': 'التصنيف',
-
-      'destinations.placeholders.categoryEn': 'مثال: Transport',
-      'destinations.placeholders.categoryAr': 'مثال: نقل',
-
-      'destinations.toast.created': 'تم إنشاء الوجهة',
-      'destinations.toast.updated': 'تم تحديث الوجهة',
-      'destinations.toast.nameRequired': 'الاسم مطلوب',
-      'destinations.toast.confirmDeleteTitle': 'حذف الوجهة؟',
-      'destinations.toast.confirmDeleteBody': 'سيتم إزالتها من قوائم الاختيار. لا يمكن التراجع عن هذا الإجراء.',
-      'destinations.toast.confirmDeleteAction': 'حذف',
-
-      'destinations.title': 'الوجهات',
-      'destinations.description': 'إدارة وجهات الرحلات.',
-      'destinations.listTitle': 'قائمة الوجهات',
-      'destinations.searchPlaceholder': 'ابحث بالاسم…',
-      'destinations.add': 'إضافة وجهة',
-      'destinations.addTitle': 'إضافة وجهة',
-      'destinations.editTitle': 'تعديل الوجهة',
-      'destinations.empty': 'لا توجد وجهات',
-
-      'destinations.fields.nameEn': 'الاسم (إنجليزي)',
-      'destinations.fields.nameAr': 'الاسم (عربي)',
-      'destinations.fields.category': 'التصنيف',
-      'destinations.fields.active': 'نشط',
-      'destinations.fields.activeHint': 'الوجهات غير النشطة لا تظهر ضمن خيارات الاختيار.',
-
-      'destinations.placeholders.nameEn': 'مثال: Airport',
-      'destinations.placeholders.nameAr': 'مثال: المطار',
-      'destinations.placeholders.category': 'مثال: نقل',
-
-      'destinations.toast.loadFailed': 'تعذر تحميل الوجهات',
-      'destinations.toast.saved': 'تم الحفظ',
-      'destinations.toast.saveFailed': 'تعذر حفظ الوجهة',
-      'destinations.toast.deleted': 'تم الحذف',
-      'destinations.toast.deleteFailed': 'تعذر حذف الوجهة',
-
-      'notifications.description': 'جميع التنبيهات والتحديثات',
-      'notifications.none': 'لا توجد إشعارات',
-      'notifications.new': 'جديد',
-      'notifications.mark_all_read': 'تحديد الكل كمقروء',
-      'notifications.toast.marked_n': 'تم تحديد {{n}} كمقروء',
-      'notifications.toast.mark_failed': 'تعذر تحديد الإشعارات كمقروءة',
-      'notifications.toast.load_failed': 'تعذر تحميل الإشعارات',
-
-      'notifications.severity.INFO': 'معلومات',
-      'notifications.severity.WARN': 'تحذير',
-      'notifications.severity.BLOCKER': 'حرج',
-
   },
 } as const;
 

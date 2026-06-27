@@ -1,0 +1,13 @@
+Delete these from the repo before soft production:
+
+.env
+supabase/functions/.env
+supabase/.temp/
+backup_data.sql
+backup_schema.sql
+Fleet7.zip
+bun.lockb
+node_modules/
+dist/  (optional; do not commit build output unless your hosting requires it)
+
+If these files were ever pushed/shared, do not only delete them in a new commit. Rotate the secrets and purge the Git history using BFG or git-filter-repo.

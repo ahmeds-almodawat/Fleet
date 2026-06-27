@@ -24,6 +24,7 @@ import {
   AlertTriangle,
   Bell,
   ImageIcon,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -107,6 +108,7 @@ const adminNavItems: NavItem[] = [
   { icon: Shield, label: "Roles", path: "/roles" },
   { icon: ShieldAlert, label: "Audit Logs", path: "/admin/audit", permission: 'audit.read' },
   { icon: ClipboardCheck, label: "Jobs", path: "/admin/jobs", permission: 'system.jobs.view' },
+  { icon: Activity, label: "System Health", path: "/admin/health", permissions: ['system.health.view', 'system.jobs.view'] },
   { icon: FileDown, label: "Backups", path: "/admin/backups", permission: 'system.backup.export' },
   { icon: ImageIcon, label: "Studio", path: "/admin/studio", permissions: ['studio.manage','settings.manage'] },
   { icon: Settings, label: "Settings", path: "/settings" },

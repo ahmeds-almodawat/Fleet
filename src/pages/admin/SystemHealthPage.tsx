@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "@/i18n";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -6,18 +6,48 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { CheckCircle2, XCircle, RefreshCw, Database, HardDrive } from "lucide-react";
+import { CheckCircle2, XCircle, RefreshCw, Database, ShieldAlert, Activity } from "lucide-react";
 
-type Check = {
+type HealthCheck = {
   key: string;
   label: string;
-  description: string;
-  run: () => Promise<{ ok: boolean; detail?: string }>;
+  ok: boolean;
+  severity?: "info" | "warning" | "critical";
+  detail?: string | null;
 };
+
+type HealthPayload = {
+  ok: boolean;
+  generated_at?: string;
+  checks: HealthCheck[];
+};
+
+function asHealthPayload(value: unknown): HealthPayload {
+  const candidate = value as Partial<HealthPayload> | null;
+  if (!candidate || !Array.isArray(candidate.checks)) {
+    return {
+      ok: false,
+      checks: [{ key: "shape", label: "Health payload", ok: false, severity: "critical", detail: "Unexpected health-check response" }],
+    };
+  }
+
+  return {
+    ok: candidate.ok === true,
+    generated_at: candidate.generated_at,
+    checks: candidate.checks.map((check) => ({
+      key: String(check.key ?? "unknown"),
+      label: String(check.label ?? check.key ?? "Unknown check"),
+      ok: check.ok === true,
+      severity: check.severity ?? (check.ok ? "info" : "warning"),
+      detail: check.detail ?? null,
+    })),
+  };
+}
 
 export default function SystemHealthPage() {
   const { t } = useTranslation();
@@ -25,53 +55,19 @@ export default function SystemHealthPage() {
   const { user } = useAuth();
 
   const [running, setRunning] = useState(false);
-  const [results, setResults] = useState<Record<string, { ok: boolean; detail?: string }>>({});
-
-  const checks: Check[] = useMemo(
-    () => [
-      {
-        key: "db",
-        label: t("health.dbTitle"),
-        description: t("health.dbDesc"),
-        run: async () => {
-          const { error } = await supabase.from("app_settings" as any).select("key").limit(1);
-          return { ok: !error, detail: error?.message };
-        },
-      },
-      {
-        key: "rpc",
-        label: t("health.rpcTitle"),
-        description: t("health.rpcDesc"),
-        run: async () => {
-          const { error } = await supabase.rpc("get_unread_notifications_count");
-          return { ok: !error, detail: error?.message };
-        },
-      },
-      {
-        key: "storage",
-        label: t("health.storageTitle"),
-        description: t("health.storageDesc"),
-        run: async () => {
-          const { error } = await supabase.storage.listBuckets();
-          return { ok: !error, detail: error?.message };
-        },
-      },
-    ],
-    [t]
-  );
+  const [health, setHealth] = useState<HealthPayload | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const runAll = async () => {
     setRunning(true);
+    setError(null);
     try {
-      const next: Record<string, { ok: boolean; detail?: string }> = {};
-      for (const c of checks) {
-        try {
-          next[c.key] = await c.run();
-        } catch (e: any) {
-          next[c.key] = { ok: false, detail: e?.message ?? "Unknown error" };
-        }
-      }
-      setResults(next);
+      const { data, error: rpcError } = await supabase.rpc("admin_system_health_check" as never);
+      if (rpcError) throw rpcError;
+      setHealth(asHealthPayload(data));
+    } catch (e) {
+      setHealth(null);
+      setError(e instanceof Error ? e.message : "Unknown health-check error");
     } finally {
       setRunning(false);
     }
@@ -79,91 +75,93 @@ export default function SystemHealthPage() {
 
   useEffect(() => {
     runAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const overall = Object.values(results);
-  const allOk = overall.length > 0 && overall.every((r) => r.ok);
+  const checks = health?.checks ?? [];
+  const criticalFailures = checks.filter((check) => !check.ok && check.severity === "critical").length;
+  const warningFailures = checks.filter((check) => !check.ok && check.severity !== "critical").length;
+  const allOk = health?.ok === true && !criticalFailures && !warningFailures;
 
   return (
     <MainLayout>
       <div className="space-y-6">
         <PageHeader
-          title={t("health.title")}
-          subtitle={t("health.subtitle")}
+          title={t("health.title", { defaultValue: "System Health" })}
+          subtitle={t("health.subtitle", { defaultValue: "Run production-readiness checks against the connected Supabase project." })}
           actions={
             <Button onClick={runAll} disabled={running} variant="outline">
-              <RefreshCw className={cn("h-4 w-4", isRtl ? "ml-2" : "mr-2")} />
-              {running ? t("health.running") : t("health.refresh")}
+              <RefreshCw className={cn("h-4 w-4", running && "animate-spin", isRtl ? "ml-2" : "mr-2")} />
+              {running ? t("health.running", { defaultValue: "Running..." }) : t("health.refresh", { defaultValue: "Refresh" })}
             </Button>
           }
         />
 
+        {error && (
+          <Alert variant="destructive">
+            <ShieldAlert className="h-4 w-4" />
+            <AlertTitle>{t("health.failed", { defaultValue: "Health check failed" })}</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         <Card className="border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className={cn("flex items-center justify-between gap-2", isRtl && "flex-row-reverse")}> 
-              <span>{t("health.summary")}</span>
-              <Badge variant={allOk ? "secondary" : "destructive"}>
-                {allOk ? t("health.ok") : t("health.attention")}
+            <CardTitle className={cn("flex items-center justify-between gap-2", isRtl && "flex-row-reverse")}>
+              <span className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+                <Activity className="h-5 w-5 text-muted-foreground" />
+                {t("health.summary", { defaultValue: "Summary" })}
+              </span>
+              <Badge variant={allOk ? "secondary" : criticalFailures ? "destructive" : "outline"}>
+                {allOk
+                  ? t("health.ok", { defaultValue: "Ready" })
+                  : criticalFailures
+                    ? t("health.critical", { defaultValue: "Critical" })
+                    : t("health.attention", { defaultValue: "Needs attention" })}
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <div className={cn("flex flex-col gap-1", isRtl && "text-right")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-3", isRtl && "text-right")}>
               <div>
-                {t("health.user")} : <span className="text-foreground">{user?.email ?? "-"}</span>
+                {t("health.user", { defaultValue: "User" })}: <span className="text-foreground">{user?.email ?? "-"}</span>
               </div>
               <div>
-                {t("health.lang")} : <span className="text-foreground">{(i18n.language || "en").toUpperCase()}</span>
+                {t("health.generatedAt", { defaultValue: "Generated" })}: <span className="text-foreground">{health?.generated_at ?? "-"}</span>
+              </div>
+              <div>
+                {t("health.failures", { defaultValue: "Failures" })}: <span className="text-foreground">{criticalFailures} critical / {warningFailures} warning</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {checks.map((c) => {
-            const r = results[c.key];
-            const ok = r?.ok;
-            const Icon = c.key === "db" ? Database : c.key === "storage" ? HardDrive : Database;
-            return (
-              <Card key={c.key} className="border-0 shadow-sm">
-                <CardHeader>
-                  <CardTitle className={cn("flex items-center justify-between gap-2", isRtl && "flex-row-reverse")}> 
-                    <span className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                      {c.label}
-                    </span>
-                    {r ? (
-                      ok ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                      ) : (
-                        <XCircle className="h-4 w-4 text-rose-600" />
-                      )
-                    ) : (
-                      <Badge variant="secondary">{t("health.pending")}</Badge>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className={cn("text-sm text-muted-foreground", isRtl && "text-right")}>{c.description}</div>
-                  <Separator />
-                  <div className={cn("text-xs", isRtl && "text-right")}>
-                    {r ? (
-                      r.ok ? (
-                        <span className="text-emerald-700">{t("health.passed")}</span>
-                      ) : (
-                        <span className="text-rose-700">
-                          {t("health.failed")} {r.detail ? `— ${r.detail}` : ""}
-                        </span>
-                      )
-                    ) : (
-                      <span className="text-muted-foreground">{t("health.pending")}</span>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {checks.map((check) => (
+            <Card key={check.key} className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle className={cn("flex items-center justify-between gap-2", isRtl && "flex-row-reverse")}>
+                  <span className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+                    <Database className="h-4 w-4 text-muted-foreground" />
+                    {check.label}
+                  </span>
+                  {check.ok ? (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  ) : (
+                    <XCircle className={cn("h-4 w-4", check.severity === "critical" ? "text-rose-600" : "text-amber-600")} />
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Badge variant={check.ok ? "secondary" : check.severity === "critical" ? "destructive" : "outline"}>
+                  {check.ok ? t("health.passed", { defaultValue: "Passed" }) : check.severity ?? "warning"}
+                </Badge>
+                <Separator />
+                <div className={cn("text-sm text-muted-foreground", isRtl && "text-right")}>
+                  {check.detail || (check.ok ? t("health.noIssue", { defaultValue: "No issue found." }) : t("health.noDetail", { defaultValue: "No details returned." }))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </MainLayout>

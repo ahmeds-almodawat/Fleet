@@ -28,7 +28,7 @@ import { Car, Eye, Pencil, Plus, Search, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 type Department = { id: string; name: string };
-type VehicleType = { id: string; name: string };
+type VehicleType = { id: string; name: string; name_en?: string | null; name_ar?: string | null };
 type UserOption = { id: string; name_en: string | null; name_ar: string | null };
 
 type Vehicle = {

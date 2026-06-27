@@ -195,7 +195,7 @@ export function CommandPalette() {
             const { data } = await qb;
             return (data || []).map((v: any) => ({
               id: v.id,
-              type: "vehicle",
+              type: "vehicle" as const,
               title: `${v.vehicle_code} — ${v.plate_no}`,
               subtitle: t("cmd.result.vehicle"),
               path: `/vehicles/${v.id}`,
@@ -221,7 +221,7 @@ export function CommandPalette() {
             const { data } = await qb;
             return (data || []).map((tr: any) => ({
               id: tr.id,
-              type: "trip",
+              type: "trip" as const,
               title: `${tr.trip_no} — ${tr.destination_text || ""}`.trim(),
               subtitle: t("cmd.result.trip"),
               path: `/trips/${tr.id}`,
@@ -234,9 +234,9 @@ export function CommandPalette() {
         if (canSearchMaintenance) {
           const p = (async () => {
             let qb = supabase
-              .from("maintenance_records")
-              .select("id, vehicle_id, maintenance_type, scheduled_date, status, vehicle:vehicles(vehicle_code, plate_no, department_id)")
-              .or(`maintenance_type.ilike.${like},status.ilike.${like}`)
+              .from("vehicle_maintenance")
+              .select("id, vehicle_id, custom_type_name, scheduled_date, status, vehicle:vehicles(vehicle_code, plate_no, department_id), maintenance_type:maintenance_types(name)")
+              .or(`custom_type_name.ilike.${like},status.ilike.${like}`)
               .order("scheduled_date", { ascending: false })
               .limit(6);
 
@@ -251,8 +251,8 @@ export function CommandPalette() {
               const pl = m.vehicle?.plate_no || "";
               return {
                 id: m.id,
-                type: "maintenance",
-                title: `${t("cmd.result.maintenance")}: ${m.maintenance_type} — ${vc} ${pl}`.trim(),
+                type: "maintenance" as const,
+                title: `${t("cmd.result.maintenance")}: ${m.maintenance_type?.name || m.custom_type_name || ""} — ${vc} ${pl}`.trim(),
                 subtitle: m.status,
                 path: `/maintenance`,
                 icon: Wrench,
@@ -277,7 +277,7 @@ export function CommandPalette() {
             const { data } = await qb;
             return (data || []).map((u: any) => ({
               id: u.id,
-              type: "user",
+              type: "user" as const,
               title: (isRtl ? u.name_ar : u.name_en) || u.name_en || u.name_ar || u.staff_id,
               subtitle: u.staff_id ? `${t("cmd.result.staffId")}: ${u.staff_id}` : t("cmd.result.user"),
               path: `/users`,
@@ -297,7 +297,7 @@ export function CommandPalette() {
 
             return (data || []).map((d: any) => ({
               id: d.id,
-              type: "department",
+              type: "department" as const,
               title: d.name,
               subtitle: t("cmd.result.department"),
               path: `/settings`,

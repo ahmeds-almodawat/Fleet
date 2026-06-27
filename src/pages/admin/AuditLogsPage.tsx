@@ -100,7 +100,7 @@ export default function AuditLogsPage() {
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data || []) as AuditRow[];
+      return (data || []) as unknown as AuditRow[];
     },
   });
 

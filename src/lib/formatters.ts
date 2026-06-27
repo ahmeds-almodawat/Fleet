@@ -1,11 +1,23 @@
 import { isRtl, locale } from './i18n-helpers';
 
+export type NumberFormatPreset = 'integer' | 'decimal' | 'currency';
+
 export type NumberFormatOpts = Intl.NumberFormatOptions & {
   /** Force Latin digits (123) even when Arabic UI is enabled. */
   forceLatin?: boolean;
   /** Use Arabic-Indic digits (١٢٣) when Arabic UI is enabled. Default: true. */
   arabicDigits?: boolean;
 };
+
+function normalizeNumberOpts(opts?: NumberFormatOpts | NumberFormatPreset): NumberFormatOpts {
+  if (!opts) return {};
+  if (typeof opts === 'string') {
+    if (opts === 'integer') return { maximumFractionDigits: 0 };
+    if (opts === 'decimal') return { maximumFractionDigits: 2 };
+    return {};
+  }
+  return opts;
+}
 
 function numberLocale(opts: NumberFormatOpts = {}): string {
   if (opts.forceLatin) return 'en-US';
@@ -22,19 +34,21 @@ function numberLocale(opts: NumberFormatOpts = {}): string {
  * - Arabic UI: defaults to Arabic-Indic digits (١٢٣) for read-only display.
  * - Use opts.forceLatin for identifiers/URLs/keys where Latin digits are required.
  */
-export function formatNumber(value: number | string | null | undefined, opts?: NumberFormatOpts): string {
+export function formatNumber(value: number | string | null | undefined, opts?: NumberFormatOpts | NumberFormatPreset): string {
   if (value === null || value === undefined || value === '') return '';
   const n = typeof value === 'number' ? value : Number(value);
   if (!Number.isFinite(n)) return String(value);
-  const { forceLatin, arabicDigits, ...nfOpts } = opts || {};
+  const normalizedOpts = normalizeNumberOpts(opts);
+  const { forceLatin, arabicDigits, ...nfOpts } = normalizedOpts;
   return new Intl.NumberFormat(numberLocale({ forceLatin, arabicDigits }), nfOpts).format(n);
 }
 
-export function formatCurrency(value: number | string | null | undefined, currency: string = 'SAR', opts?: NumberFormatOpts): string {
+export function formatCurrency(value: number | string | null | undefined, currency: string = 'SAR', opts?: NumberFormatOpts | NumberFormatPreset): string {
   if (value === null || value === undefined || value === '') return '';
   const n = typeof value === 'number' ? value : Number(value);
   if (!Number.isFinite(n)) return String(value);
-  const { forceLatin, arabicDigits, ...nfOpts } = opts || {};
+  const normalizedOpts = normalizeNumberOpts(opts);
+  const { forceLatin, arabicDigits, ...nfOpts } = normalizedOpts;
   return new Intl.NumberFormat(numberLocale({ forceLatin, arabicDigits }), {
     style: 'currency',
     currency,

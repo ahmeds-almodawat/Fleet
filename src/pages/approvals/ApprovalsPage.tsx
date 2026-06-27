@@ -58,7 +58,7 @@ export default function ApprovalsPage() {
     }
 
     const { data } = await query;
-    if (data) setTrips(data as PendingTrip[]);
+    if (data) setTrips(data as unknown as PendingTrip[]);
     setLoading(false);
   };
 

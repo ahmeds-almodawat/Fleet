@@ -7,10 +7,27 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies / builds
 node_modules
 dist
 dist-ssr
+coverage
+.vite
+
+# Runtime secrets - never commit
+.env
+.env.*
+!.env.example
+supabase/functions/.env
+supabase/functions/.env.*
+supabase/.temp/
+
+# Local / generated artifacts
 *.local
+*.zip
+backup_*.sql
+backup_data.sql
+backup_schema.sql
 
 # Editor directories and files
 .vscode/*

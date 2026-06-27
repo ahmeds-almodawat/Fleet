@@ -23,6 +23,8 @@ import { format } from 'date-fns';
 
 interface TripDetails {
   id: string;
+  vehicle_id: string;
+  department_id: string | null;
   trip_no: string;
   status: string;
   destination_text: string;

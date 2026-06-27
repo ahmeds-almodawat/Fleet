@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { hasAnyPermissionInSet, permissionSetHas } from '@/lib/permissionAliases';
 
 interface Profile {
   id: string;
@@ -148,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: (error as any) ?? null };
+    return { error: error ?? null };
   };
 
   // NOTE: your DB trigger already creates profiles on auth signup.
@@ -164,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       options: { emailRedirectTo: window.location.origin },
     });
 
-    if (error) return { error: (error as any) ?? null };
+    if (error) return { error: error ?? null };
 
     if (data.user) {
       const { error: profileError } = await supabase.from('profiles').upsert(
@@ -172,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         { onConflict: 'id' }
       );
 
-      if (profileError) return { error: (profileError as any) ?? null };
+      if (profileError) return { error: profileError ?? null };
     }
 
     return { error: null };
@@ -186,8 +187,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setPermissions([]);
   };
 
-  const hasPermission = (permission: string) => permissions.includes(permission);
-  const hasAnyPermission = (perms: string[]) => perms.some((p) => permissions.includes(p));
+  const permissionSet = useMemo(() => new Set(permissions), [permissions]);
+  const hasPermission = (permission: string) => permissionSetHas(permissionSet, permission);
+  const hasAnyPermission = (perms: string[]) => hasAnyPermissionInSet(permissionSet, perms);
 
   const value = useMemo<AuthContextType>(() => ({
     user,
@@ -201,7 +203,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     hasPermission,
     hasAnyPermission,
     refreshProfile,
-  }), [user, session, profile, permissions, loading]);
+  }), [user, session, profile, permissions, permissionSet, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -152,13 +152,19 @@ export default function ReportsPage() {
 
   const handleExportPDF = () => {
     // Audit (best effort)
-    supabase.rpc('log_audit_event', {
-      p_action: 'reports.export_pdf',
-      p_entity_type: 'reports',
-      p_entity_id: null,
-      p_summary: `Printed report as PDF (range ${dateRange}d)`,
-      p_metadata_json: { range_days: dateRange }
-    }).catch(() => void 0);
+    void (async () => {
+      try {
+        await supabase.rpc('log_audit_event', {
+          p_action: 'reports.export_pdf',
+          p_entity_type: 'reports',
+          p_entity_id: null,
+          p_summary: `Printed report as PDF (range ${dateRange}d)`,
+          p_metadata_json: { range_days: dateRange }
+        });
+      } catch {
+        // best effort only
+      }
+    })();
     window.print();
   };
 

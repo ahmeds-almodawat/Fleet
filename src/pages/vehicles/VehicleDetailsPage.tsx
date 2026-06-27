@@ -129,7 +129,7 @@ export default function VehicleDetailsPage() {
 
     if (vehicleRes.data) setVehicle(vehicleRes.data as Vehicle);
     if (maintenanceRes.data) setMaintenance(maintenanceRes.data as MaintenanceRecord[]);
-    if (tripsRes.data) setTrips(tripsRes.data as TripRecord[]);
+    if (tripsRes.data) setTrips(tripsRes.data as unknown as TripRecord[]);
     setLoading(false);
   };
 
