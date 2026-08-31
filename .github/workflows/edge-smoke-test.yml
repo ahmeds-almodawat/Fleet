@@ -1,0 +1,71 @@
+name: Edge Security Smoke Test
+
+on:
+  push:
+    branches:
+      - automation/fleet-remediation-20260831
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_URL: https://rlxhgffmspfstwlxljdc.functions.supabase.co
+    steps:
+      - name: Unauthenticated calls are rejected
+        shell: bash
+        run: |
+          set -euo pipefail
+          check_unauthorized() {
+            local method="$1"
+            local endpoint="$2"
+            local body="${3:-}"
+            local output
+            output="$(mktemp)"
+            if [[ "$method" == "POST" ]]; then
+              status=$(curl --silent --show-error --output "$output" --write-out '%{http_code}' \
+                --request POST "$BASE_URL/$endpoint" \
+                --header 'Content-Type: application/json' \
+                --data "${body:-{}}")
+            else
+              status=$(curl --silent --show-error --output "$output" --write-out '%{http_code}' \
+                --request GET "$BASE_URL/$endpoint")
+            fi
+            cat "$output"
+            echo
+            test "$status" = "401"
+          }
+
+          check_unauthorized GET run-jobs
+          check_unauthorized POST ocr-odometer '{}'
+          check_unauthorized POST admin-create-user '{}'
+          check_unauthorized GET maintenance-reminders
+
+      - name: Public trip evidence URL is closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          object_path='e2024d42-f6a0-4173-aa76-ba3ab8793332/1768682933944.jpg'
+          status=$(curl --silent --show-error --output response.txt --write-out '%{http_code}' \
+            "https://rlxhgffmspfstwlxljdc.supabase.co/storage/v1/object/public/trip-photos/$object_path")
+          cat response.txt
+          echo
+          test "$status" != "200"
+
+      - name: Scheduler secret succeeds
+        env:
+          RUN_JOBS_SECRET: ${{ secrets.RUN_JOBS_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RUN_JOBS_SECRET"
+          curl --fail-with-body --silent --show-error \
+            --request POST "$BASE_URL/run-jobs" \
+            --header "x-scheduler-secret: $RUN_JOBS_SECRET" \
+            --output response.json
+          cat response.json
+          jq -e '.ok == true and (.result.failed // 0) == 0' response.json
