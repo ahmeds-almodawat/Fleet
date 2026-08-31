@@ -1,0 +1,29 @@
+name: Export Validation Dependencies
+
+on:
+  push:
+    branches:
+      - automation/fleet-remediation-20260831
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Package dependencies
+        run: tar -czf fleet-node-modules.tgz node_modules
+      - uses: actions/upload-artifact@v7
+        with:
+          name: fleet-node-modules
+          path: fleet-node-modules.tgz
+          if-no-files-found: error
+          retention-days: 1
