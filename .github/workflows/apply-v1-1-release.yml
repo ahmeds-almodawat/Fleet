@@ -1,0 +1,63 @@
+name: Build Fleet v1.1 Release Branch
+
+on:
+  push:
+    branches:
+      - automation/fleet-remediation-20260831
+    paths:
+      - 'release-patches/fleet-v1.1.0-combined.patch.gz.b64'
+      - '.github/workflows/apply-v1-1-release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out patch staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: automation/fleet-remediation-20260831
+          fetch-depth: 0
+
+      - name: Decode combined patch
+        shell: bash
+        run: |
+          base64 --decode release-patches/fleet-v1.1.0-combined.patch.gz.b64 > /tmp/fleet-v1.1.patch.gz
+          gzip -dc /tmp/fleet-v1.1.patch.gz > /tmp/fleet-v1.1.patch
+
+      - name: Build release branch from main
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout -B release/fleet-v1.1-adoption origin/main
+          git apply --check /tmp/fleet-v1.1.patch
+          git apply /tmp/fleet-v1.1.patch
+          git diff --check
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install exact dependencies
+        run: npm ci --ignore-scripts --no-fund
+
+      - name: Run complete release validation
+        env:
+          CI: 'true'
+          VITE_SUPABASE_URL: https://example.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_example
+        run: npm run validate
+
+      - name: Commit validated release
+        shell: bash
+        run: |
+          git config user.name 'Fleet Release Bot'
+          git config user.email 'fleet-release-bot@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: Fleet v1.1 adoption-first ride requests'
+          git push --force-with-lease origin release/fleet-v1.1-adoption
